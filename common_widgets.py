@@ -26,10 +26,10 @@ class Float_Line_Edit_Core(QLineEdit):
         # self.setLayout(h_layout)
 
     def set_value(self, value):
-        self.blockSignals(True) #设置值时不引发textChanged事件
+        self.blockSignals(True)  # 设置值时不引发textChanged事件
         self.setText(str(value))
         self.blockSignals(False)
-        
+
         self.existsUnlegalValue = False  # 默认传入的不会是有问题的值。
 
     def get_value(self):
@@ -101,8 +101,68 @@ class Float_Line_Edit(QWidget):
         return self.floatLineEdit.is_unlegal()
 
 
+class Choose_One(QWidget):
+    # 我是SB！这种单选的小事，并且没有魔改的可能或必要，用得着我一个第三方实现吗？
+    # 删了可惜，就这么留着，如有必要随时可以完善。
+
+    choiceChanged = pyqtSignal()
+
+    def __init__(self, lbName: str, choices: dict):
+        """
+        choices:
+        {结果代码：外显的说明字符串}
+        例如：{False: "关闭", True: "开启"}
+        """
+        super(Choose_One, self).__init__()
+
+        #########################################
+        # 当前状态
+        self.currentChoice = None
+        ##########################################
+
+        self.lb = QLabel(lbName)
+
+        self.choices = choices
+        self.radioBtns = {choice: QRadioButton(description) for (
+            choice, description) in self.choices.items()}
+
+        for (_choice, radioBtn) in self.radioBtns.items():
+            radioBtn.toggled.connect(self.choiceChanged)
+            radioBtn.toggled.connect(self.change_choice(_choice))
+
+        #############################################
+        # 控件摆放
+        h_layout = QHBoxLayout()
+        h_layout.addWidget(self.lb)
+
+        for radioBtn in self.radioBtns.values():
+            h_layout.addWidget(radioBtn)
+
+        self.setLayout(h_layout)
+
+    def change_choice(self, _choice):
+        # 本来用lambda函数实现，但是会导致所有的选项都只跟最后一个choice关联，只能这么“绕圈”实现。
+        def f():
+            self.currentChoice = _choice
+            print(self.currentChoice)
+
+        return f
+
+    def set_choice(self, choice):
+        self.currentChoice = choice
+
+        self.radioBtns[choice].blockSignals(True)
+        self.radioBtns[choice].setChecked(True)
+        self.radioBtns[choice].blockSignals(False)
+
+    def get_choice(self):
+        return self.currentChoice
+
+
 if (__name__ == "__main__"):
     app = QApplication([])
-    window = Float_Line_Edit()
+    # window = Float_Line_Edit()
+    window = Choose_One(
+        "114514", {"对的": "yyyyyyyyyyy", "不对！": "nnnnnnnnnnnnnnnnnnnnnnnn", 3: "ddddd"})
     window.show()
     app.exec()

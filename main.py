@@ -5,6 +5,7 @@ import sys
 import json
 import pathlib
 from characters_editor import Chars_Editor
+from meta_data import Meta_Data_Editor
 
 
 class MainWindow(QMainWindow):
@@ -38,11 +39,17 @@ class MainWindow(QMainWindow):
 
         self.btn_open.clicked.connect(self.func_btn_open)
         self.btn_save_as.clicked.connect(self.func_btn_save_as)
+        self.btn_save.clicked.connect(self.func_btn_save)
 
         ###############################################
         # 操控人物编辑
         self.charsEditor = Chars_Editor()
         self.charsEditor.valueChanged.connect(self.update_data)
+
+        ###############################################
+        # 元数据编辑
+        self.metaDataEditor = Meta_Data_Editor()
+        self.metaDataEditor.valueChanged.connect(self.update_data)
 
         ####################################################
         # 标签栏
@@ -51,6 +58,7 @@ class MainWindow(QMainWindow):
 
         # self.charsEditor_title="操控人物数据(PlayerData)"
         self.tabWidget.addTab(self.charsEditor, "操控人物数据(PlayerData)")
+        self.tabWidget.addTab(self.metaDataEditor, "有编辑意义的元数据(均来自OtherData)")
 
         ###################################################
         # 控件装入
@@ -69,7 +77,9 @@ class MainWindow(QMainWindow):
             with open(filePath, "rt") as jsonfile:
                 self.dataBuffer = json.load(jsonfile)
 
+            # 各部分控件载入数据
             self.charsEditor.set_data(self.dataBuffer["PlayerData"])
+            self.metaDataEditor.set_data(self.dataBuffer["OtherData"])
 
             # 不载入文件不让使用保存功能
             self.set_data_saved(True)
@@ -98,7 +108,8 @@ class MainWindow(QMainWindow):
     #######################################
     # 重写函数区
     def closeEvent(self, event):
-        if (not self.saved):
+        if (self.saved == False):
+            # saved值为None(尚未载入文件)时，也不必提示是否需要保存，直接关闭即可。
             choice = QMessageBox.question(
                 self, "文件尚未保存！", "是否保存了文件再退出？", QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
 
@@ -113,8 +124,9 @@ class MainWindow(QMainWindow):
     ##################################
 
     def update_data(self):
-        # 意想不到的收获：未载入文件时，dataBuffer为空，此行无法完成，于是无法执行下一行的程序。但是又不导致程序退出。
+        # 意想不到的收获：未载入文件时，dataBuffer为空，此行无法完成，于是无法执行最底下一行的程序。但是又不导致程序退出。
         self.dataBuffer["PlayerData"] = self.charsEditor.get_data()
+        self.dataBuffer["OtherData"] = self.metaDataEditor.get_data()
         self.set_data_saved(False)
 
     def set_data_saved(self, b: bool):
