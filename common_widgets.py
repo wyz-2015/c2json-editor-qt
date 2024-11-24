@@ -103,14 +103,14 @@ class Float_Line_Edit(QWidget):
 
 class Choose_One(QWidget):
     # 我是SB！这种单选的小事，并且没有魔改的可能或必要，用得着我一个第三方实现吗？
-    # 删了可惜，就这么留着，如有必要随时可以完善。
+    # 删了可惜，就这么留着，如有必要随时可以改改就用。
 
     choiceChanged = pyqtSignal()
 
     def __init__(self, lbName: str, choices: dict):
         """
         choices:
-        {结果代码：外显的说明字符串}
+        {结果代码: 外显的说明字符串}
         例如：{False: "关闭", True: "开启"}
         """
         super(Choose_One, self).__init__()
@@ -159,10 +159,75 @@ class Choose_One(QWidget):
         return self.currentChoice
 
 
+class Tuple_Float_Line_Edit(QWidget):
+    """
+    paraNames:
+    其中元素均为str的可迭代对象。
+    例如：("x", "y", "z"), ["114", "514"]
+    """
+
+    valueChanged = pyqtSignal()
+
+    def __init__(self, paraNames):
+        super(Tuple_Float_Line_Edit, self).__init__()
+
+        self.paraNames = paraNames
+
+        lb1_text = "({0:s})=(".format(",".join(self.paraNames))
+        self.lb1 = QLabel(lb1_text)
+        self.lb2 = QLabel(")")
+
+        self.floatLineEdits = {paraName: Float_Line_Edit_Core()
+                               for paraName in self.paraNames}
+        for widget in self.floatLineEdits.values():
+            widget.textChanged.connect(self.valueChanged)
+
+        ###################################################
+        # 控件摆放
+        h_layout = QHBoxLayout()
+        h_layout.addWidget(self.lb1)
+        for widget in self.floatLineEdits.values():
+            h_layout.addWidget(widget)
+        h_layout.addWidget(self.lb2)
+
+        self.setLayout(h_layout)
+
+    def set_value(self, values):
+        """
+        values:
+        2种可用类型：(1)dict (2)其他可迭代类型，tuple、list等
+        """
+        if (type(values) == type(dict())):
+            # 允许2中设值方式，一种通过字典匹配键名设值。好处是允许部分改值
+            for (k, v) in values.items():
+                self.floatLineEdits[k].set_value(v)
+        else:
+            # 另一种方式则是按实例化本类时的参数名列表的顺序，依次赋值。
+            for i in range(len(self.paraNames)):
+                self.floatLineEdits[self.paraNames[i]].set_value(values[i])
+
+    def get_value(self, returnType=None):
+        """
+        returnType:
+        如果填dict，则数据会以{传入时的参数名: 值}的形式返回。
+        """
+        values = [(self.floatLineEdits[paraName].get_value() if (
+            not self.floatLineEdits[paraName].is_unlegal()) else None) for paraName in self.paraNames]
+
+        if (returnType == dict):
+            values2 = dict()
+            for i in range(len(self.paraNames)):
+                values2[self.paraNames[i]] = values[i]
+            return values2
+        else:
+            return values
+
+
 if (__name__ == "__main__"):
     app = QApplication([])
     # window = Float_Line_Edit()
-    window = Choose_One(
-        "114514", {"对的": "yyyyyyyyyyy", "不对！": "nnnnnnnnnnnnnnnnnnnnnnnn", 3: "ddddd"})
+    # window = Choose_One(
+    #    "114514", {"对的": "yyyyyyyyyyy", "不对！": "nnnnnnnnnnnnnnnnnnnnnnnn", 3: "ddddd"})
+    window = Tuple_Float_Line_Edit(["114", "51444"])
     window.show()
     app.exec()

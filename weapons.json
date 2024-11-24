@@ -1,0 +1,176 @@
+{
+	"A": {
+		"A1": {
+			"name": "weapon2",
+			"dest": "大刀"
+		},
+		"A2": {
+			"name": "weapon3",
+			"dest": "手榴弹"
+		},
+		"A3": {
+			"name": "weapon4",
+			"dest": "燃烧瓶"
+		}
+	},
+
+	"B": {
+		"B1": {
+			"name": "weapon8",
+			"dest": "默认手枪-消音"
+		},
+		"B2": {
+			"name": "weapon9",
+			"dest": "左轮-消音"
+		},
+		"B3": {
+			"name": "weapon10",
+			"dest": "二十响-消音"
+		},
+		"B4": {
+			"name": "weapon11",
+			"dest": "沙鹰-消音"
+		}
+	},
+
+	"C": {
+		"C1": {
+			"name": "weapon16",
+			"dest": "左轮"
+		},
+		"C2": {
+			"name": "weapon17",
+			"dest": "二十响"
+		},
+		"C3": {
+			"name": "weapon18",
+			"dest": "沙鹰"
+		}
+	},
+
+	"D": {
+		"D1": {
+			"name": "weapon22",
+			"dest": "Uzi"
+		},
+		"D2": {
+			"name": "weapon23",
+			"dest": "MP40"
+		},
+		"D3": {
+			"name": "weapon24",
+			"dest": "PPSh"
+		},
+		"D4": {
+			"name": "weapon25",
+			"dest": "黄AK"
+		},
+		"D5": {
+			"name": "weapon26",
+			"dest": "布伦式"
+		}
+	},
+
+	"E": {
+		"E1": {
+			"name": "weapon30",
+			"dest": "红弓"
+		},
+		"E2": {
+			"name": "weapon31",
+			"dest": "蓝弩"
+		},
+		"E3": {
+			"name": "weapon33",
+			"dest": "鱼叉"
+		},
+		"E4": {
+			"name": "weapon32",
+			"dest": "凤凰弩"
+		}
+	},
+
+	"F": {
+		"F1": {
+			"name": "weapon35",
+			"dest": "棕色霰弹枪"
+		},
+		"F2": {
+			"name": "weapon36",
+			"dest": "蓝色霰弹枪"
+		},
+		"F3": {
+			"name": "weapon37",
+			"dest": "小手炮"
+		},
+		"F4": {
+			"name": "weapon38",
+			"dest": "追踪炮"
+		},
+		"F5": {
+			"name": "weapon39",
+			"dest": "橙色三连炮"
+		}
+	},
+
+	"G": {
+		"G1": {
+			"name": "weapon43",
+			"dest": "黄色火箭炮"
+		},
+		"G2": {
+			"name": "weapon44",
+			"dest": "蓝色穿甲炮"
+		},
+		"G3": {
+			"name": "weapon45",
+			"dest": "蜘蛛发射器"
+		},
+		"G4": {
+			"name": "weapon46",
+			"dest": "黑AK"
+		},
+		"G5": {
+			"name": "weapon47",
+			"dest": "加特林"
+		}
+	},
+
+	"H": {
+		"H1": {
+			"name": "weapon51",
+			"dest": "小机关炮"
+		},
+		"H2": {
+			"name": "weapon52",
+			"dest": "弧线五炸炮"
+		},
+		"H3": {
+			"name": "weapon53",
+			"dest": "电磁炮"
+		},
+		"H4": {
+			"name": "weapon54",
+			"dest": "四连发炮"
+		}
+	},
+
+	"I": {
+		"I1": {
+			"name": "weapon58",
+			"dest": "龙炮"
+		},
+		"I2": {
+			"name": "weapon59",
+			"dest": "飞行电钻"
+		},
+		"I3": {
+			"name": "weapon60",
+			"dest": "KJT"
+		},
+		"I4": {
+			"name": "weapon61",
+			"dest": "双管霰弹枪"
+		}
+	}
+}
