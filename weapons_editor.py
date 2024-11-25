@@ -2,6 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from common_widgets import *
+import json
 
 
 class Weapons_Nickname(QWidget):
@@ -35,17 +36,21 @@ class Weapons_Nickname(QWidget):
 
 
 class Weapons_Editor_Common(QWidget):
-    # TODO:数据的输入、输出、更新
+    # 数据的输入、输出、更新(完成)
     valueChanged = pyqtSignal()
 
-    def __init__(self):  # weaponDest="(武器俗称)"):
+    def __init__(self, weaponMetaData={"name": "weaponxx", "dest": "(武器俗称)"}):
         super(Weapons_Editor_Common, self).__init__()
 
         #############################################
         # 状态量
+        (self.weaponDest, self.weaponMetaName) = (
+            weaponMetaData["dest"], weaponMetaData["name"])
         self.dataBuffer = None
+        # self.setMinimumWidth(480)# 没有用？
 
         # self.lb = QLabel(weaponDest) #去最外层的QGroupBox再显示武器俗称
+        self.groupBox = QGroupBox(self.weaponDest)  # 就在这里实现，试试
 
         self.widgets = {
             "name": Weapons_Nickname("自定昵称"),
@@ -66,26 +71,36 @@ class Weapons_Editor_Common(QWidget):
         # 控件摆放
         h_layout1 = QHBoxLayout()
         h_layout2 = QHBoxLayout()
+        h_layout2_2 = QHBoxLayout()
         v_layout = QVBoxLayout()
 
         # h_layout1.addWidget(self.lb)
         v_layout.addWidget(self.widgets["name"])
-        for key in ("lock", "magz", "freq", "bult", "sped", "dmg1"):
+        for key in ("lock", "magz", "freq"):
             h_layout2.addWidget(self.widgets[key])
-        v_layout.addLayout(h_layout2)
+        for key in ("bult", "sped", "dmg1"):
+            h_layout2_2.addWidget(self.widgets[key])
+        for layout in (h_layout2, h_layout2_2):
+            v_layout.addLayout(layout)
         h_layout1.addLayout(v_layout)
 
-        self.setLayout(h_layout1)
+        self.groupBox.setLayout(h_layout1)
+
+        layout4groupBox = QHBoxLayout()
+        layout4groupBox.addWidget(self.groupBox)
+
+        self.setLayout(layout4groupBox)
 
     def set_data(self, data):
         self.dataBuffer = data
 
-        self.widgets["name"].set_text(self.dataBuffer["text"])
+        self.widgets["name"].set_text(self.dataBuffer["name"])
         for key in ("lock", "magz", "freq", "bult", "sped", "dmg1"):
-            self.widget[key].set_value(self.dataBuffer[key])
+            self.widgets[key].set_value(self.dataBuffer[key])
 
     def get_data(self):
-        return self.dataBuffer
+        # 由于所有控件发送的信息，都一股脑地发送到上级控件同一个处理函数中，必须“包装”一个名字信息作区分。
+        return {self.weaponMetaName: self.dataBuffer}
 
     def update_data(self):
         data = dict()
@@ -94,18 +109,93 @@ class Weapons_Editor_Common(QWidget):
             data[key] = self.widgets[key].get_value()
 
         self.dataBuffer = data
-        print(self.dataBuffer)
+        print({self.weaponMetaName: self.dataBuffer})
 
 
 class Weapons_Editor(QWidget):
+    valueChanged = pyqtSignal()
+
     def __init__(self):
         super(Weapons_Editor, self).__init__()
 
-        pass
+        ########################################
+        # 状态量
+        # self.resize(800,60)
+        # self.setMinimumHeight(600)
+        self.dataBuffer = None
+
+        self.weaponList = self.__load_list__()
+        self.__widgets_init__()
+
+        # print(self.weaponList)
+
+        ########################################
+        # 推导生成标签页样式
+        self.tabWidget = QTabWidget()
+        temp_pageName = 'A'
+        for page in self.weaponList:
+            temp_widget = QWidget()
+            temp_scrollArea = QScrollArea()
+            temp_v_layout = QVBoxLayout()
+            for weapon in page:
+                temp_v_layout.addWidget(weapon["widget"])
+            temp_widget.setLayout(temp_v_layout)
+            temp_scrollArea.setWidget(temp_widget)
+            self.tabWidget.addTab(temp_scrollArea, temp_pageName)
+            temp_pageName = chr(ord(temp_pageName)+1)
+
+        ############################################
+        # 槽信连接
+        for page in self.weaponList:
+            for weapon in page:
+                weapon["widget"].valueChanged.connect(self.update_data)
+                weapon["widget"].valueChanged.connect(self.valueChanged)
+
+        ###########################################
+        # 控件摆放
+        v_layout = QVBoxLayout()
+        v_layout.addWidget(self.tabWidget)
+
+        self.setLayout(v_layout)
+
+    def __load_list__(self):
+        """
+        读取“weapon.json”文件，读入其中的武器分区表、俗名表
+        """
+        with open("weapons.json", "rt") as jsonfile:
+            return json.load(jsonfile)
+
+    def __widgets_init__(self):
+        """
+        在self.weaponList中塞入控件
+        """
+        for page in self.weaponList:
+            for item in page:
+                item["widget"] = Weapons_Editor_Common(item)
+
+    ##########################################################
+    # 槽函数区
+    def update_data(self):
+        widget = self.sender()
+        (key, data) = (None, None)
+        for (k, v) in widget.get_data().items():
+            (key, data) = (k, v)
+        self.dataBuffer[key] = data
+
+    def set_data(self, data):
+        self.dataBuffer = data
+
+        for page in self.weaponList:
+            for weapon in page:
+                weapon["widget"].set_data(self.dataBuffer[weapon["name"]])
+
+    def get_data(self):
+        return self.dataBuffer
 
 
 if (__name__ == "__main__"):
     app = QApplication([])
-    window = Weapons_Editor_Common()
+    # window = Weapons_Editor_Common()
+    window = Weapons_Editor()
     window.show()
     app.exec()

@@ -6,6 +6,7 @@ import json
 import pathlib
 from characters_editor import Chars_Editor
 from meta_data import Meta_Data_Editor
+from weapons_editor import Weapons_Editor
 
 
 class MainWindow(QMainWindow):
@@ -46,6 +47,11 @@ class MainWindow(QMainWindow):
         self.charsEditor = Chars_Editor()
         self.charsEditor.valueChanged.connect(self.update_data)
 
+        ##############################################
+        # 武器数据编辑
+        self.weaponsEditor = Weapons_Editor()
+        self.weaponsEditor.valueChanged.connect(self.update_data)
+
         ###############################################
         # 元数据编辑
         self.metaDataEditor = Meta_Data_Editor()
@@ -58,6 +64,7 @@ class MainWindow(QMainWindow):
 
         # self.charsEditor_title="操控人物数据(PlayerData)"
         self.tabWidget.addTab(self.charsEditor, "操控人物数据(PlayerData)")
+        self.tabWidget.addTab(self.weaponsEditor, "武器数据(WeaponData)")
         self.tabWidget.addTab(self.metaDataEditor, "有编辑意义的元数据(均来自OtherData)")
 
         ###################################################
@@ -80,6 +87,7 @@ class MainWindow(QMainWindow):
             # 各部分控件载入数据
             self.charsEditor.set_data(self.dataBuffer["PlayerData"])
             self.metaDataEditor.set_data(self.dataBuffer["OtherData"])
+            self.weaponsEditor.set_data(self.dataBuffer["WeaponData"])
 
             # 不载入文件不让使用保存功能
             self.set_data_saved(True)
@@ -127,6 +135,7 @@ class MainWindow(QMainWindow):
         # 意想不到的收获：未载入文件时，dataBuffer为空，此行无法完成，于是无法执行最底下一行的程序。但是又不导致程序退出。
         self.dataBuffer["PlayerData"] = self.charsEditor.get_data()
         self.dataBuffer["OtherData"] = self.metaDataEditor.get_data()
+        self.dataBuffer["WeaponData"] = self.weaponsEditor.get_data()
         self.set_data_saved(False)
 
     def set_data_saved(self, b: bool):

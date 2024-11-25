@@ -138,7 +138,7 @@ class Chars_Editor_Common(QWidget):
     def set_data(self, PlayerData: dict):
         data = self.__data_filter__(PlayerData)
         self.dataBuffer = data
-        print(self.dataBuffer)
+        # print(self.dataBuffer)
 
         for (name, widget) in self.widgets.items():
             widget.set_value(self.dataBuffer[name])
