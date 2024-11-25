@@ -1,0 +1,178 @@
+[
+	{
+		"name": "enemy12",
+		"dest": "日军普通兵"
+	},
+	{
+		"name": "enemy14",
+		"dest": "汉奸贾队长"
+	},
+	{
+		"name": "enemy26",
+		"dest": "机枪手"
+	},
+	{
+		"name": "enemy30",
+		"dest": "浪人"
+	},
+	{
+		"name": "enemy31",
+		"dest": "狙击手"
+	},
+	{
+		"name": "enemy23",
+		"dest": "日军骑兵"
+	},
+	{
+		"name": "enemy12_2",
+		"dest": "醉酒日军"
+	},
+	{
+		"name": "enemy18",
+		"dest": "日军剑士"
+	},
+	{
+		"name": "enemy27",
+		"dest": "“周比利”军曹"
+	},
+	{
+		"name": "enemy1",
+		"dest": "蓝德军"
+	},
+	{
+		"name": "enemy5",
+		"dest": "黑德军"
+	},
+	{
+		"name": "enemy05_2",
+		"dest": "盖世太保"
+	},
+	{
+		"name": "enemy42",
+		"dest": "原住民(枪)"
+	},
+	{
+		"name": "enemy43",
+		"dest": "原住民(镖)"
+	},
+	{
+		"name": "enemy44",
+		"dest": "原住民(长老)"
+	},
+	{
+		"name": "enemy33",
+		"dest": "缠绕藤草"
+	},
+	{
+		"name": "enemy34",
+		"dest": "虫群"
+	},
+	{
+		"name": "enemy35",
+		"dest": "鳄鱼"
+	},
+	{
+		"name": "enemy15",
+		"dest": "滚桶"
+	},
+	{
+		"name": "enemy16",
+		"dest": "TNT矿车"
+	},
+	{
+		"name": "enemy13",
+		"dest": "运载卡车"
+	},
+	{
+		"name": "enemy6",
+		"dest": "地雷"
+	},
+	{
+		"name": "enemy11",
+		"dest": "无人机"
+	},
+	{
+		"name": "enemy38",
+		"dest": "激光器"
+	},
+	{
+		"name": "enemy39",
+		"dest": "滚地炮"
+	},
+	{
+		"name": "enemy2",
+		"dest": "含羞运输机"
+	},
+	{
+		"name": "enemy29",
+		"dest": "机枪吉普"
+	},
+	{
+		"name": "enemy3",
+		"dest": "平射坦克"
+	},
+	{
+		"name": "enemy03_2",
+		"dest": "三叉坦克"
+	},
+	{
+		"name": "enemy03_3",
+		"dest": "带刺平射坦克"
+	},
+	{
+		"name": "enemy03_4",
+		"dest": "机枪装甲车"
+	},
+	{
+		"name": "enemy8",
+		"dest": "轰炸机"
+	},
+	{
+		"name": "enemy10",
+		"dest": "神风编队飞机"
+	},
+	{
+		"name": "enemy20",
+		"dest": "BOSS 1"
+	},
+	{
+		"name": "enemy32",
+		"dest": "大师兄"
+	},
+	{
+		"name": "enemy4",
+		"dest": "C1 BOSS 1"
+	},
+	{
+		"name": "enemy40",
+		"dest": "BOSS 3"
+	},
+	{
+		"name": "enemy7",
+		"dest": "C1 BOSS 2"
+	},
+	{
+		"name": "enemy49",
+		"dest": "武士机器人"
+	},
+	{
+		"name": "enemy9",
+		"dest": "C1 BOSS 3"
+	},
+	{
+		"name": "enemy45",
+		"dest": "火箭尾"
+	},
+	{
+		"name": "enemy46",
+		"dest": "火箭(红激光+玉米炮)"
+	},
+	{
+		"name": "enemy47",
+		"dest": "火箭(导弹+激光眼)"
+	},
+	{
+		"name": "enemy48",
+		"dest": "火箭头"
+	}
+]
