@@ -7,6 +7,7 @@ import pathlib
 from characters_editor import Chars_Editor
 from meta_data import Meta_Data_Editor
 from weapons_editor import Weapons_Editor
+from enemies_editor import Enemies_Editor
 
 
 class MainWindow(QMainWindow):
@@ -52,6 +53,11 @@ class MainWindow(QMainWindow):
         self.weaponsEditor = Weapons_Editor()
         self.weaponsEditor.valueChanged.connect(self.update_data)
 
+        ##############################################
+        # 敌人数据编辑
+        self.enemiesEditor=Enemies_Editor()
+        self.enemiesEditor.valueChanged.connect(self.update_data)
+
         ###############################################
         # 元数据编辑
         self.metaDataEditor = Meta_Data_Editor()
@@ -65,6 +71,7 @@ class MainWindow(QMainWindow):
         # self.charsEditor_title="操控人物数据(PlayerData)"
         self.tabWidget.addTab(self.charsEditor, "操控人物数据(PlayerData)")
         self.tabWidget.addTab(self.weaponsEditor, "武器数据(WeaponData)")
+        self.tabWidget.addTab(self.enemiesEditor, "敌方单位数据(EnemyData)")
         self.tabWidget.addTab(self.metaDataEditor, "有编辑意义的元数据(均来自OtherData)")
 
         ###################################################
@@ -88,6 +95,7 @@ class MainWindow(QMainWindow):
             self.charsEditor.set_data(self.dataBuffer["PlayerData"])
             self.metaDataEditor.set_data(self.dataBuffer["OtherData"])
             self.weaponsEditor.set_data(self.dataBuffer["WeaponData"])
+            self.enemiesEditor.set_data(self.dataBuffer["EnemyData"])
 
             # 不载入文件不让使用保存功能
             self.set_data_saved(True)
@@ -136,6 +144,7 @@ class MainWindow(QMainWindow):
         self.dataBuffer["PlayerData"] = self.charsEditor.get_data()
         self.dataBuffer["OtherData"] = self.metaDataEditor.get_data()
         self.dataBuffer["WeaponData"] = self.weaponsEditor.get_data()
+        self.dataBuffer["EnemyData"] = self.enemiesEditor.get_data()
         self.set_data_saved(False)
 
     def set_data_saved(self, b: bool):

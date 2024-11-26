@@ -172,5 +172,16 @@
 			"name": "weapon61",
 			"dest": "双管霰弹枪"
 		}
+	],
+
+	[
+		{
+			"name": "weapon1",
+			"dest": "默认小刀"
+		},
+		{
+			"name": "weapon15",
+			"dest": "默认手枪"
+		}
 	]
 ]

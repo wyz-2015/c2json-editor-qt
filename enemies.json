@@ -36,11 +36,11 @@
 		"dest": "“周比利”军曹"
 	},
 	{
-		"name": "enemy1",
+		"name": "enemy01",
 		"dest": "蓝德军"
 	},
 	{
-		"name": "enemy5",
+		"name": "enemy05",
 		"dest": "黑德军"
 	},
 	{
@@ -84,7 +84,7 @@
 		"dest": "运载卡车"
 	},
 	{
-		"name": "enemy6",
+		"name": "enemy06",
 		"dest": "地雷"
 	},
 	{
@@ -100,7 +100,7 @@
 		"dest": "滚地炮"
 	},
 	{
-		"name": "enemy2",
+		"name": "enemy02",
 		"dest": "含羞运输机"
 	},
 	{
@@ -108,7 +108,7 @@
 		"dest": "机枪吉普"
 	},
 	{
-		"name": "enemy3",
+		"name": "enemy03",
 		"dest": "平射坦克"
 	},
 	{
@@ -124,7 +124,7 @@
 		"dest": "机枪装甲车"
 	},
 	{
-		"name": "enemy8",
+		"name": "enemy08",
 		"dest": "轰炸机"
 	},
 	{
@@ -140,7 +140,7 @@
 		"dest": "大师兄"
 	},
 	{
-		"name": "enemy4",
+		"name": "enemy04",
 		"dest": "C1 BOSS 1"
 	},
 	{
@@ -148,7 +148,7 @@
 		"dest": "BOSS 3"
 	},
 	{
-		"name": "enemy7",
+		"name": "enemy07",
 		"dest": "C1 BOSS 2"
 	},
 	{
@@ -156,7 +156,7 @@
 		"dest": "武士机器人"
 	},
 	{
-		"name": "enemy9",
+		"name": "enemy09",
 		"dest": "C1 BOSS 3"
 	},
 	{

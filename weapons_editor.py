@@ -111,6 +111,9 @@ class Weapons_Editor_Common(QWidget):
         self.dataBuffer = data
         print({self.weaponMetaName: self.dataBuffer})
 
+    def get_widgets(self):
+        return self.widgets
+
 
 class Weapons_Editor(QWidget):
     valueChanged = pyqtSignal()
@@ -191,6 +194,24 @@ class Weapons_Editor(QWidget):
 
     def get_data(self):
         return self.dataBuffer
+
+    def get_widgets(self):
+        """
+        [
+            [
+                {"name": "weaponxx", "dest": "……", "widget": Weapons_Editor_Common()},
+                {"name": "weaponxx", "dest": "……", "widget": Weapons_Editor_Common()},
+                ...
+            ],
+            [
+                {"name": "weaponxx", "dest": "……", "widget": Weapons_Editor_Common()},
+                {"name": "weaponxx", "dest": "……", "widget": Weapons_Editor_Common()},
+                ...
+            ],
+            ...
+        ]
+        """
+        return self.weaponList
 
 
 if (__name__ == "__main__"):

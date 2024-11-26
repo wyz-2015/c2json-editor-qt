@@ -54,6 +54,12 @@ class Meta_Data_Editor(QWidget):
             self.dataBuffer[name] = widget.get_value()
         print(self.dataBuffer)
 
+    def get_widgets(self):
+        """
+        {"键名": Float_Line_Edit()}
+        """
+        return self.widgets
+
 
 if (__name__ == "__main__"):
     app = QApplication([])

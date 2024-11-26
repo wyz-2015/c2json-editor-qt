@@ -64,6 +64,9 @@ class Chars_Editor(QWidget):
         self.dataBuffer = data
         print(self.dataBuffer)
 
+    def get_widgets(self):
+        return (self.dataArea_male, self.dataArea_female)
+
 
 class Chars_Editor_Common(QWidget):
     valueChanged = pyqtSignal()
@@ -142,6 +145,12 @@ class Chars_Editor_Common(QWidget):
 
         for (name, widget) in self.widgets.items():
             widget.set_value(self.dataBuffer[name])
+
+    def get_widgets(self):
+        """
+        {"键名": Float_Line_Edit()}
+        """
+        return self.widgets
 
     def get_data(self):
         return self.dataBuffer
