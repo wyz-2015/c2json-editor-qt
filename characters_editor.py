@@ -111,7 +111,7 @@ class Chars_Editor_Common(QWidget):
         # }
 
         for widget in self.widgets.values():
-            widget.valueChanged.connect(self.data_update)
+            widget.valueChanged.connect(self.update_data)
             widget.valueChanged.connect(self.valueChanged)
 
         ################################
@@ -122,7 +122,7 @@ class Chars_Editor_Common(QWidget):
 
         self.setLayout(v_layout)
 
-    def data_update(self):
+    def update_data(self):
         # data = {
         #    "player{0:n}_health".format(self.charId): self.health.get_value(),
         #    "player{0:n}_speed".format(self.charId): self.speed.get_value(),

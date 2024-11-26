@@ -25,8 +25,8 @@ class Meta_Data_Editor(QWidget):
         }
 
         for widget in self.widgets.values():
-            widget.valueChanged.connect(self.valueChanged)
             widget.valueChanged.connect(self.update_data)
+            widget.valueChanged.connect(self.valueChanged)
 
         ##################################################
         # 控件摆放

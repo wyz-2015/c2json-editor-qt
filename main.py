@@ -107,6 +107,7 @@ class MainWindow(QMainWindow):
         (savePath, filter) = QFileDialog.getSaveFileName(
             self, "另存 .json 文件", str(self.currentDir), "(*.json)")
         if (savePath):
+            print(self.dataBuffer)
             with open(savePath, "wt") as jsonfile:
                 json.dump(self.dataBuffer, jsonfile,
                           ensure_ascii=False, indent="\t")
@@ -120,6 +121,8 @@ class MainWindow(QMainWindow):
             with open(str(self.currentFile), "wt") as jsonfile:
                 json.dump(self.dataBuffer, jsonfile,
                           ensure_ascii=False, indent="\t")
+
+            self.set_data_saved(True)
 
     #######################################
     # 重写函数区

@@ -70,9 +70,10 @@ class Weapons_Editor_Common(QWidget):
 
         self.widgets["name"].textChanged.connect(self.valueChanged)
         self.widgets["name"].textChanged.connect(self.update_data)
-        for key in (["lock", "magz", "freq", "bult", "sped", "dmg1"] + self.dmgs):
-            self.widgets[key].valueChanged.connect(self.valueChanged)
+        for key in (["lock", "magz", "freq", "bult", "sped"] + self.dmgs):
+            # 一定要先update_data，再valueChanged ！！！！！！！
             self.widgets[key].valueChanged.connect(self.update_data)
+            self.widgets[key].valueChanged.connect(self.valueChanged)
 
         ##############################################
         # 控件摆放
@@ -109,7 +110,7 @@ class Weapons_Editor_Common(QWidget):
 
     def get_data(self):
         # 由于所有控件发送的信息，都一股脑地发送到上级控件同一个处理函数中，必须“包装”一个名字信息作区分。
-        return {self.weaponMetaName: self.dataBuffer}
+        return (self.weaponMetaName, self.dataBuffer)
 
     def update_data(self):
         data = dict()
@@ -189,10 +190,10 @@ class Weapons_Editor(QWidget):
     # 槽函数区
     def update_data(self):
         widget = self.sender()
-        (key, data) = (None, None)
-        for (k, v) in widget.get_data().items():
-            (key, data) = (k, v)
+        (key, data) = widget.get_data()
         self.dataBuffer[key] = data
+
+        # self.valueChanged.emit()
 
     def set_data(self, data):
         self.dataBuffer = data
