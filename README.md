@@ -8,7 +8,7 @@
 
 1. 本程序是以为探索者提供工具为目的编写的，实验与探索必然伴随着一定的失败。<span style="color: red">本程序并不确保*利用本程序修改的mod*，能在游戏中正确运行；同时对由上述行为引发的不良后果概不负责。</span>
 
-2. 本程序遵循GPLv3协议开放源代码。
+2. 本程序遵循[GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)协议开放源代码。
 
 ## 安装方法
 
@@ -35,6 +35,8 @@ python -m pip install pyqt5 -i https://mirrors.aliyun.com/pypi/simple/
 
 1. 从游戏内创意工坊界面中导出自己创立的mod的json数据到本地。
 
-2. 用本程序打开json文件并编辑。
+2. 执行本目录下的`main.py`以启动程序。
+
+2. 用本程序打开json文件并编辑，保存或另存。
 
 3. 将修改过的json文件导入并覆盖需要目标mod。
