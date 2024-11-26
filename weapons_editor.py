@@ -39,13 +39,13 @@ class Weapons_Editor_Common(QWidget):
     # 数据的输入、输出、更新(完成)
     valueChanged = pyqtSignal()
 
-    def __init__(self, weaponMetaData={"name": "weaponxx", "dest": "(武器俗称)"}):
+    def __init__(self, weaponMetaData={"name": "weaponxx", "dest": "(武器俗称)", "atk_types": 1}):
         super(Weapons_Editor_Common, self).__init__()
 
         #############################################
         # 状态量
-        (self.weaponDest, self.weaponMetaName) = (
-            weaponMetaData["dest"], weaponMetaData["name"])
+        (self.weaponDest, self.weaponMetaName, self.numOfAtkTypes) = (
+            weaponMetaData["dest"], weaponMetaData["name"], weaponMetaData["atk_types"])
         self.dataBuffer = None
         # self.setMinimumWidth(480)# 没有用？
 
@@ -59,11 +59,18 @@ class Weapons_Editor_Common(QWidget):
             "freq": Float_Line_Edit("开火频率(百分比)"),
             "bult": Float_Line_Edit("单次开火弹幕数"),
             "sped": Float_Line_Edit("弹幕速度"),
-            "dmg1": Tuple_Float_Line_Edit(("单弹幕单伤", "单弹幕总伤"))
+            # "dmg1": Tuple_Float_Line_Edit(("单弹幕单伤", "单弹幕总伤"))
         }
+        #####################
+        # 攻击方式自动推导
+        self.dmgs = ["dmg%d" % (n) for n in range(1, self.numOfAtkTypes + 1)]
+        for dmg in self.dmgs:
+            self.widgets[dmg] = Tuple_Float_Line_Edit(
+                ("%s单弹幕单伤" % (dmg), "%s单弹幕总伤" % (dmg)))
+
         self.widgets["name"].textChanged.connect(self.valueChanged)
         self.widgets["name"].textChanged.connect(self.update_data)
-        for key in ("lock", "magz", "freq", "bult", "sped", "dmg1"):
+        for key in (["lock", "magz", "freq", "bult", "sped", "dmg1"] + self.dmgs):
             self.widgets[key].valueChanged.connect(self.valueChanged)
             self.widgets[key].valueChanged.connect(self.update_data)
 
@@ -78,10 +85,12 @@ class Weapons_Editor_Common(QWidget):
         v_layout.addWidget(self.widgets["name"])
         for key in ("lock", "magz", "freq"):
             h_layout2.addWidget(self.widgets[key])
-        for key in ("bult", "sped", "dmg1"):
+        for key in ("bult", "sped"):  # , "dmg1"):
             h_layout2_2.addWidget(self.widgets[key])
         for layout in (h_layout2, h_layout2_2):
             v_layout.addLayout(layout)
+        for dmg in self.dmgs:  # dmg自动推导
+            v_layout.addWidget(self.widgets[dmg])
         h_layout1.addLayout(v_layout)
 
         self.groupBox.setLayout(h_layout1)
@@ -95,7 +104,7 @@ class Weapons_Editor_Common(QWidget):
         self.dataBuffer = data
 
         self.widgets["name"].set_text(self.dataBuffer["name"])
-        for key in ("lock", "magz", "freq", "bult", "sped", "dmg1"):
+        for key in (["lock", "magz", "freq", "bult", "sped"] + self.dmgs):
             self.widgets[key].set_value(self.dataBuffer[key])
 
     def get_data(self):
@@ -105,7 +114,7 @@ class Weapons_Editor_Common(QWidget):
     def update_data(self):
         data = dict()
         data["name"] = self.widgets["name"].get_text()
-        for key in ("lock", "magz", "freq", "bult", "sped", "dmg1"):
+        for key in (["lock", "magz", "freq", "bult", "sped"] + self.dmgs):
             data[key] = self.widgets[key].get_value()
 
         self.dataBuffer = data

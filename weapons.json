@@ -2,186 +2,225 @@
 	[
 		{
 			"name": "weapon2",
-			"dest": "大刀"
+			"dest": "大刀",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon3",
-			"dest": "手榴弹"
+			"dest": "手榴弹",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon4",
-			"dest": "燃烧瓶"
+			"dest": "燃烧瓶",
+			"atk_types": 1
 		}
 	],
 
 	[
 		{
 			"name": "weapon8",
-			"dest": "默认手枪-消音"
+			"dest": "默认手枪-消音",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon9",
-			"dest": "左轮-消音"
+			"dest": "左轮-消音",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon10",
-			"dest": "二十响-消音"
+			"dest": "二十响-消音",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon11",
-			"dest": "沙鹰-消音"
+			"dest": "沙鹰-消音",
+			"atk_types": 1
 		}
 	],
 
 	[
 		{
 			"name": "weapon16",
-			"dest": "左轮"
+			"dest": "左轮",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon17",
-			"dest": "二十响"
+			"dest": "二十响",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon18",
-			"dest": "沙鹰"
+			"dest": "沙鹰",
+			"atk_types": 1
 		}
 	],
 
 	[
 		{
 			"name": "weapon22",
-			"dest": "Uzi"
+			"dest": "Uzi",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon23",
-			"dest": "MP40"
+			"dest": "MP40",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon24",
-			"dest": "PPSh"
+			"dest": "PPSh",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon25",
-			"dest": "黄AK"
+			"dest": "黄AK",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon26",
-			"dest": "布伦式"
+			"dest": "布伦式",
+			"atk_types": 1
 		}
 	],
 
 	[
 		{
 			"name": "weapon30",
-			"dest": "红弓"
+			"dest": "红弓",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon31",
-			"dest": "蓝弩"
+			"dest": "蓝弩",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon33",
-			"dest": "鱼叉"
+			"dest": "鱼叉",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon32",
-			"dest": "凤凰弩"
+			"dest": "凤凰弩",
+			"atk_types": 2
 		}
 	],
 
 	[
 		{
 			"name": "weapon35",
-			"dest": "棕色霰弹枪"
+			"dest": "棕色霰弹枪",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon36",
-			"dest": "蓝色霰弹枪"
+			"dest": "蓝色霰弹枪",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon37",
-			"dest": "小手炮"
+			"dest": "小手炮",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon38",
-			"dest": "追踪炮"
+			"dest": "追踪炮",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon39",
-			"dest": "橙色三连炮"
+			"dest": "橙色三连炮",
+			"atk_types": 1
 		}
 	],
 
 	[
 		{
 			"name": "weapon43",
-			"dest": "黄色火箭炮"
+			"dest": "黄色火箭炮",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon44",
-			"dest": "蓝色穿甲炮"
+			"dest": "蓝色穿甲炮",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon45",
-			"dest": "蜘蛛发射器"
+			"dest": "蜘蛛发射器",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon46",
-			"dest": "黑AK"
+			"dest": "黑AK",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon47",
-			"dest": "加特林"
+			"dest": "加特林",
+			"atk_types": 1
 		}
 	],
 
 	[
 		{
 			"name": "weapon51",
-			"dest": "小机关炮"
+			"dest": "小机关炮",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon52",
-			"dest": "弧线五炸炮"
+			"dest": "弧线五炸炮",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon53",
-			"dest": "电磁炮"
+			"dest": "电磁炮",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon54",
-			"dest": "四连发炮"
+			"dest": "四连发炮",
+			"atk_types": 1
 		}
 	],
 
 	[
 		{
 			"name": "weapon58",
-			"dest": "龙炮"
+			"dest": "龙炮",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon59",
-			"dest": "飞行电钻"
+			"dest": "飞行电钻",
+			"atk_types": 2
 		},
 		{
 			"name": "weapon60",
-			"dest": "KJT"
+			"dest": "KJT",
+			"atk_types": 2
 		},
 		{
 			"name": "weapon61",
-			"dest": "双管霰弹枪"
+			"dest": "双管霰弹枪",
+			"atk_types": 2
 		}
 	],
 
 	[
 		{
 			"name": "weapon1",
-			"dest": "默认小刀"
+			"dest": "默认小刀",
+			"atk_types": 1
 		},
 		{
 			"name": "weapon15",
-			"dest": "默认手枪"
+			"dest": "默认手枪",
+			"atk_types": 1
 		}
 	]
 ]
