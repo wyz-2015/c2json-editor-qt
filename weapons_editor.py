@@ -68,8 +68,8 @@ class Weapons_Editor_Common(QWidget):
             self.widgets[dmg] = Tuple_Float_Line_Edit(
                 ("%s单弹幕单伤" % (dmg), "%s单弹幕总伤" % (dmg)))
 
-        self.widgets["name"].textChanged.connect(self.valueChanged)
         self.widgets["name"].textChanged.connect(self.update_data)
+        self.widgets["name"].textChanged.connect(self.valueChanged)
         for key in (["lock", "magz", "freq", "bult", "sped"] + self.dmgs):
             # 一定要先update_data，再valueChanged ！！！！！！！
             self.widgets[key].valueChanged.connect(self.update_data)
