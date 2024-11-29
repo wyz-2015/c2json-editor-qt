@@ -41,4 +41,4 @@ python -m pip install pyqt5 -i https://mirrors.aliyun.com/pypi/simple/
 
 2. 用本程序打开json文件并编辑，保存或另存。
 
-3. 将修改过的json文件导入并覆盖需要目标mod。
+3. 将修改过的json文件导入并覆盖目标mod。

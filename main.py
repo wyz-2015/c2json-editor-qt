@@ -66,6 +66,7 @@ class MainWindow(QMainWindow):
         ####################################################
         # 标签栏
         self.tabWidget = QTabWidget()
+        self.tabWidget.setEnabled(False)#一开始不能使用，载入了文件才能使用。
         self.tabWidget.setTabPosition(QTabWidget.North)
 
         # self.charsEditor_title="操控人物数据(PlayerData)"
@@ -102,6 +103,9 @@ class MainWindow(QMainWindow):
             if (not (self.btn_save.isEnabled() and self.btn_save_as.isEnabled())):
                 self.btn_save.setEnabled(True)
                 self.btn_save_as.setEnabled(True)
+
+            # 不载入文件不让使用
+            self.tabWidget.setEnabled(True)
 
     def func_btn_save_as(self):
         (savePath, filter) = QFileDialog.getSaveFileName(
