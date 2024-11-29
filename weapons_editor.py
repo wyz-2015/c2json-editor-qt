@@ -175,7 +175,7 @@ class Weapons_Editor(QWidget):
         """
         读取“weapon.json”文件，读入其中的武器分区表、俗名表
         """
-        with open("weapons.json", "rt") as jsonfile:
+        with open("weapons.json", "rt", encoding="utf-8") as jsonfile:
             return json.load(jsonfile)
 
     def __widgets_init__(self):

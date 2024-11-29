@@ -89,7 +89,7 @@ class MainWindow(QMainWindow):
             print(filePath)
             self.change_current_file(filePath)
             # self.dataBuffer = read_json_data(filePath)
-            with open(filePath, "rt") as jsonfile:
+            with open(filePath, "rt", encoding="utf-8") as jsonfile:
                 self.dataBuffer = json.load(jsonfile)
 
             # 各部分控件载入数据
@@ -112,7 +112,7 @@ class MainWindow(QMainWindow):
             self, "另存 .json 文件", str(self.currentDir), "(*.json)")
         if (savePath):
             print(self.dataBuffer)
-            with open(savePath, "wt") as jsonfile:
+            with open(savePath, "wt", encoding="utf-8") as jsonfile:
                 json.dump(self.dataBuffer, jsonfile,
                           ensure_ascii=False, indent="\t")
 
@@ -122,7 +122,7 @@ class MainWindow(QMainWindow):
     def func_btn_save(self):
         if (not self.saved):
             print(self.dataBuffer)
-            with open(str(self.currentFile), "wt") as jsonfile:
+            with open(str(self.currentFile), "wt", encoding="utf-8") as jsonfile:
                 json.dump(self.dataBuffer, jsonfile,
                           ensure_ascii=False, indent="\t")
 

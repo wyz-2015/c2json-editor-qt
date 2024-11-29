@@ -108,7 +108,7 @@ class Enemies_Editor(QWidget):
         """
         从json文件中读入代码名、俗名数据
         """
-        with open("enemies.json", "rt") as jsonfile:
+        with open("enemies.json", "rt", encoding="utf-8") as jsonfile:
             return json.load(jsonfile)
 
     def __widgets_init__(self):
