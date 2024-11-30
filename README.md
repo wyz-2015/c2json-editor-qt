@@ -1,6 +1,10 @@
 # c2json-editor-qt
 
-用`Pyqt5`编写的一款 | 《二战前线合集》(*Commando Collections*)(Steam新版)下的《二战前线2》(*Commando 2*)创意工坊(*Workshop*)自定mod导出的json数据的 | **非官方**修改工具。
+用`Pyqt5`编写的一款
+
+> ——《二战前线合集》(*Commando Collections*)(Steam新版)下的《二战前线2》(*Commando 2*)创意工坊(*Workshop*)自定mod导出的json数据的
+
+>> ——**非官方**修改工具。
 
 是面向别出心裁的、具有探索精神的、想要在mod中尝试给一些对象设定非常规数据的(例如小数、负数)mod制作者的一款编辑工具。
 
