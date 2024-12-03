@@ -2,13 +2,15 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
+REPLACEMENT_VALUE = 0.1145141919810
+
 
 class Float_Line_Edit_Core(QLineEdit):
     def __init__(self):  # , lbName="未命名参数"):
         super(Float_Line_Edit_Core, self).__init__()
         ############################
         # 状态变量
-        self.existsUnlegalValue = True
+        self.existsIllegalValue = True
 
         # self.lb1 = QLabel(lbName) #QLabel也需要分离出去，提高代码复用
 
@@ -30,7 +32,7 @@ class Float_Line_Edit_Core(QLineEdit):
         self.setText(str(value))
         self.blockSignals(False)
 
-        self.existsUnlegalValue = False  # 默认传入的不会是有问题的值。
+        self.existsIllegalValue = False  # 默认传入的不会是有问题的值。
 
     def get_value(self):
         value = self.text()
@@ -49,18 +51,18 @@ class Float_Line_Edit_Core(QLineEdit):
         value = self.text()
         try:
             float(value)
-            self.existsUnlegalValue = False
+            self.existsIllegalValue = False
         except:
-            self.existsUnlegalValue = True
+            self.existsIllegalValue = True
 
-        if (self.existsUnlegalValue):
+        if (self.existsIllegalValue):
             self.setStyleSheet("QLineEdit#lineEdit { color: red; }")
         else:
             self.setStyleSheet(
                 "QLineEdit#lineEdit { color: black; }")
 
-    def is_unlegal(self) -> bool:
-        return self.existsUnlegalValue
+    def is_illegal(self) -> bool:
+        return self.existsIllegalValue
 
 
 class Float_Line_Edit(QWidget):
@@ -91,14 +93,16 @@ class Float_Line_Edit(QWidget):
         # except:
         #    QMessageBox.warning(
         #        self, "错误数据", "“{0:s}”中填入的数据不是有效的整数或小数。".format(self.lb.text()), QMessageBox.Ok)
-        if (self.floatLineEdit.is_unlegal()):
-            print("“{0:s}”中填入的数据不是有效的整数或小数。".format(self.lb.text()))
-            return None
+        if (self.floatLineEdit.is_illegal()):
+            print("“{0:s}”中填入的数据不是有效的整数或小数，在数据缓冲区中已暂时用“{1}”替代。".format(
+                self.lb.text(), REPLACEMENT_VALUE))
+            # return None
+            return REPLACEMENT_VALUE
         else:
             return self.floatLineEdit.get_value()
 
-    def is_unlegal(self):
-        return self.floatLineEdit.is_unlegal()
+    def is_illegal(self):
+        return self.floatLineEdit.is_illegal()
 
 
 class Choose_One(QWidget):
@@ -212,7 +216,7 @@ class Tuple_Float_Line_Edit(QWidget):
         如果填dict，则数据会以{传入时的参数名: 值}的形式返回。
         """
         values = [(self.floatLineEdits[paraName].get_value() if (
-            not self.floatLineEdits[paraName].is_unlegal()) else None) for paraName in self.paraNames]
+            not self.floatLineEdits[paraName].is_illegal()) else None) for paraName in self.paraNames]
 
         if (returnType == dict):
             values2 = dict()

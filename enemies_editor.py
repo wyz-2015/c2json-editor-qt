@@ -16,6 +16,7 @@ class Enemies_Editor_Common(QWidget):
         self.dataBuffer = None
         (self.enemyName, self.enemyDest) = (
             enemyMetaData["name"], enemyMetaData["dest"])
+        self.existIllegalData = None
 
         self.widgets = {
             "health": Float_Line_Edit("血量"),
@@ -58,6 +59,8 @@ class Enemies_Editor_Common(QWidget):
         for (paraName, widget) in self.widgets.items():
             widget.set_value(self.dataBuffer[paraName])
 
+        self.existIllegalData = False
+
     def get_data(self):
         return (self.enemyName, self.dataBuffer)
 
@@ -70,6 +73,18 @@ class Enemies_Editor_Common(QWidget):
         self.dataBuffer = data
         print({self.enemyName: self.dataBuffer})
 
+        self.existIllegalData = self.__check_illegal__()
+
+    def __check_illegal__(self):
+        for widget in self.widgets.values():
+            if (widget.is_illegal()):
+                return True
+
+        return False
+
+    def get_existIllegalData(self):
+        return self.existIllegalData
+
 
 class Enemies_Editor(QWidget):
     valueChanged = pyqtSignal()
@@ -80,13 +95,14 @@ class Enemies_Editor(QWidget):
         #######################################
         # 状态量
         self.dataBuffer = None
+        self.existIllegalData = None
 
         self.enemiesList = self.__load_list__()
         self.__widgets_init__()
 
         self.scrollBar = QScrollArea()
-        temp_widget=QWidget()
-        temp_layout=QVBoxLayout()
+        temp_widget = QWidget()
+        temp_layout = QVBoxLayout()
         for enemy in self.enemiesList:
             temp_layout.addWidget(enemy["widget"])
         temp_widget.setLayout(temp_layout)
@@ -118,16 +134,26 @@ class Enemies_Editor(QWidget):
         for enemy in self.enemiesList:
             enemy["widget"] = Enemies_Editor_Common(enemy)
 
+    def __check_illegal__(self):
+        for enemy in self.enemiesList:
+            if (enemy["widget"].get_existIllegalData()):
+                return True
+        return False
+
     def update_data(self):
         widget = self.sender()
         (enemyName, data) = widget.get_data()
         self.dataBuffer[enemyName] = data
+
+        self.existIllegalData = self.__check_illegal__()
 
     def set_data(self, data):
         self.dataBuffer = data
 
         for enemy in self.enemiesList:
             enemy["widget"].set_data(self.dataBuffer[enemy["name"]])
+
+        self.existIllegalData = False
 
     def get_data(self):
         return self.dataBuffer
@@ -141,6 +167,9 @@ class Enemies_Editor(QWidget):
         ]
         """
         return self.enemiesList
+
+    def get_existIllegalData(self):
+        return self.existIllegalData
 
 
 if (__name__ == "__main__"):

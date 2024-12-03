@@ -47,6 +47,7 @@ class Weapons_Editor_Common(QWidget):
         (self.weaponDest, self.weaponMetaName, self.numOfAtkTypes) = (
             weaponMetaData["dest"], weaponMetaData["name"], weaponMetaData["atk_types"])
         self.dataBuffer = None
+        self.existIllegalData = None
         # self.setMinimumWidth(480)# 没有用？
 
         # self.lb = QLabel(weaponDest) #去最外层的QGroupBox再显示武器俗称
@@ -108,6 +109,8 @@ class Weapons_Editor_Common(QWidget):
         for key in (["lock", "magz", "freq", "bult", "sped"] + self.dmgs):
             self.widgets[key].set_value(self.dataBuffer[key])
 
+        self.existIllegalData = False
+
     def get_data(self):
         # 由于所有控件发送的信息，都一股脑地发送到上级控件同一个处理函数中，必须“包装”一个名字信息作区分。
         return (self.weaponMetaName, self.dataBuffer)
@@ -121,8 +124,20 @@ class Weapons_Editor_Common(QWidget):
         self.dataBuffer = data
         print({self.weaponMetaName: self.dataBuffer})
 
+        self.existIllegalData = self.__check_illegal__()
+
     def get_widgets(self):
         return self.widgets
+
+    def __check_illegal__(self):
+        for key in (["lock", "magz", "freq", "bult", "sped"] + self.dmgs):
+            if (self.widgets[key].is_illegal()):
+                return True
+        else:
+            return False
+
+    def get_existIllegalData(self):
+        return self.existIllegalData
 
 
 class Weapons_Editor(QWidget):
@@ -136,6 +151,7 @@ class Weapons_Editor(QWidget):
         # self.resize(800,60)
         # self.setMinimumHeight(600)
         self.dataBuffer = None
+        self.existIllegalData = None
 
         self.weaponList = self.__load_list__()
         self.__widgets_init__()
@@ -186,6 +202,15 @@ class Weapons_Editor(QWidget):
             for item in page:
                 item["widget"] = Weapons_Editor_Common(item)
 
+    def __check_illegal__(self):
+        for page in self.weaponList:
+            for item in page:
+                if (item["widget"].get_existIllegalData()):
+                    return True
+
+        else:
+            return False
+
     ##########################################################
     # 槽函数区
     def update_data(self):
@@ -194,6 +219,7 @@ class Weapons_Editor(QWidget):
         self.dataBuffer[key] = data
 
         # self.valueChanged.emit()
+        self.existIllegalData = self.__check_illegal__()
 
     def set_data(self, data):
         self.dataBuffer = data
@@ -201,6 +227,8 @@ class Weapons_Editor(QWidget):
         for page in self.weaponList:
             for weapon in page:
                 weapon["widget"].set_data(self.dataBuffer[weapon["name"]])
+
+        self.existIllegalData = False
 
     def get_data(self):
         return self.dataBuffer
@@ -222,6 +250,9 @@ class Weapons_Editor(QWidget):
         ]
         """
         return self.weaponList
+
+    def get_existIllegalData(self):
+        return self.existIllegalData
 
 
 if (__name__ == "__main__"):

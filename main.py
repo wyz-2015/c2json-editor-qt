@@ -8,6 +8,7 @@ from characters_editor import Chars_Editor
 from meta_data import Meta_Data_Editor
 from weapons_editor import Weapons_Editor
 from enemies_editor import Enemies_Editor
+from common_widgets import REPLACEMENT_VALUE
 
 
 class MainWindow(QMainWindow):
@@ -24,6 +25,7 @@ class MainWindow(QMainWindow):
         self.currentDir = pathlib.Path().home()
         self.dataBuffer = None
         self.saved = None
+        self.existIllegalData = None
 
         ################################################
         # 工具栏
@@ -55,7 +57,7 @@ class MainWindow(QMainWindow):
 
         ##############################################
         # 敌人数据编辑
-        self.enemiesEditor=Enemies_Editor()
+        self.enemiesEditor = Enemies_Editor()
         self.enemiesEditor.valueChanged.connect(self.update_data)
 
         ###############################################
@@ -66,7 +68,7 @@ class MainWindow(QMainWindow):
         ####################################################
         # 标签栏
         self.tabWidget = QTabWidget()
-        self.tabWidget.setEnabled(False)#一开始不能使用，载入了文件才能使用。
+        self.tabWidget.setEnabled(False)  # 一开始不能使用，载入了文件才能使用。
         self.tabWidget.setTabPosition(QTabWidget.North)
 
         # self.charsEditor_title="操控人物数据(PlayerData)"
@@ -92,11 +94,7 @@ class MainWindow(QMainWindow):
             with open(filePath, "rt", encoding="utf-8") as jsonfile:
                 self.dataBuffer = json.load(jsonfile)
 
-            # 各部分控件载入数据
-            self.charsEditor.set_data(self.dataBuffer["PlayerData"])
-            self.metaDataEditor.set_data(self.dataBuffer["OtherData"])
-            self.weaponsEditor.set_data(self.dataBuffer["WeaponData"])
-            self.enemiesEditor.set_data(self.dataBuffer["EnemyData"])
+            self.set_data(self.dataBuffer)
 
             # 不载入文件不让使用保存功能
             self.set_data_saved(True)
@@ -107,9 +105,16 @@ class MainWindow(QMainWindow):
             # 不载入文件不让使用
             self.tabWidget.setEnabled(True)
 
+            # 默认一开始所有数据都是合法的
+            self.existIllegalData = False
+
     def func_btn_save_as(self):
+        if (self.existIllegalData):
+            if (not self.__illegal_data_warning__(True)):  # 非法数据检查警告
+                return -1  # 被中途中止
+
         (savePath, filter) = QFileDialog.getSaveFileName(
-            self, "另存 .json 文件", str(self.currentDir), "(*.json)")
+            self, "另存 *.json 文件", str(self.currentDir), "(*.json)")
         if (savePath):
             print(self.dataBuffer)
             with open(savePath, "wt", encoding="utf-8") as jsonfile:
@@ -121,6 +126,10 @@ class MainWindow(QMainWindow):
 
     def func_btn_save(self):
         if (not self.saved):
+            if (self.existIllegalData):
+                if (not self.__illegal_data_warning__(True)):  # 非法数据检查警告
+                    return -1  # 被中途中止
+
             print(self.dataBuffer)
             with open(str(self.currentFile), "wt", encoding="utf-8") as jsonfile:
                 json.dump(self.dataBuffer, jsonfile,
@@ -138,8 +147,10 @@ class MainWindow(QMainWindow):
 
             match choice:
                 case QMessageBox.Yes:
-                    self.func_btn_save()
-                    event.accept()
+                    if (self.func_btn_save() == -1):
+                        event.ignore()
+                    else:
+                        event.accept()
                 case QMessageBox.No:
                     event.accept()
                 case _:
@@ -147,12 +158,30 @@ class MainWindow(QMainWindow):
     ##################################
 
     def update_data(self):
-        # 意想不到的收获：未载入文件时，dataBuffer为空，此行无法完成，于是无法执行最底下一行的程序。但是又不导致程序退出。
+        # 意想不到的收获：未载入文件时，dataBuffer为空，此行无法完成，于是无法执行最底下一行的程序。但是又不导致程序退出。Windows: sodayo
         self.dataBuffer["PlayerData"] = self.charsEditor.get_data()
         self.dataBuffer["OtherData"] = self.metaDataEditor.get_data()
         self.dataBuffer["WeaponData"] = self.weaponsEditor.get_data()
         self.dataBuffer["EnemyData"] = self.enemiesEditor.get_data()
+
         self.set_data_saved(False)
+        self.existIllegalData = self.__check_illegal__()
+
+    def set_data(self, data):
+        # 各部分控件载入数据
+        self.charsEditor.set_data(self.dataBuffer["PlayerData"])
+        self.metaDataEditor.set_data(self.dataBuffer["OtherData"])
+        self.weaponsEditor.set_data(self.dataBuffer["WeaponData"])
+        self.enemiesEditor.set_data(self.dataBuffer["EnemyData"])
+
+        self.existIllegalData = False  # 自动补充的数据不是非法数据，所以直接设定为没有非法数据了。
+
+    def __check_illegal__(self):
+        for module in (self.charsEditor, self.metaDataEditor, self.weaponsEditor, self.enemiesEditor):
+            if (module.get_existIllegalData):
+                return True
+        else:
+            return False
 
     def set_data_saved(self, b: bool):
         self.saved = b
@@ -165,6 +194,31 @@ class MainWindow(QMainWindow):
     def change_current_file(self, filePath: str):
         self.currentFile = pathlib.Path(filePath)
         self.currentDir = self.currentFile.parent
+
+    def __illegal_data_warning__(self, q=False) -> bool:
+        """
+        q: 是否是询问模式
+        True: 询问模式，询问是否继续
+        False: 纯弹出警告信息
+        """
+        self.set_data(self.dataBuffer)
+
+        (q_message, q_choice) = (None, None)
+        if (q):
+            # q_message = "\n如果您选择“继续”，则意味着您采用了本程序帮您自动补上的数据，随之，整份数据也确实“正确”了。\n是否继续？"
+            q_message = "是否继续？"
+            q_choice = (QMessageBox.Yes | QMessageBox.No)
+        else:
+            q_message = ""
+            q_choice = QMessageBox.Yes
+
+        choice = QMessageBox.warning(self, "警告：存在不正确数据", "您在本份数据的某处，填入了不正确的数据。\n无论如何，至少数据的数字应该∈ℝ。\n已为您暂时将不正确的数据替换为：{0}，只是为了提醒您作出修改。随之，您的数据现在已暂时“正确“。{1:s}".format(
+            REPLACEMENT_VALUE, q_message), q_choice)
+        match choice:
+            case QMessageBox.Yes:
+                return True
+            case QMessageBox.No:
+                return False
 
     ##################################
 

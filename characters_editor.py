@@ -11,7 +11,10 @@ class Chars_Editor(QWidget):
     def __init__(self):
         super(Chars_Editor, self).__init__()
 
+        #############################################
+        # 状态量
         self.dataBuffer = None
+        self.existsIllegalData = None
 
         #################################################
         # 数据编辑区
@@ -64,8 +67,20 @@ class Chars_Editor(QWidget):
         self.dataBuffer = data
         print(self.dataBuffer)
 
+        self.existsIllegalData = self.__check_illegal__()
+
     def get_widgets(self):
         return (self.dataArea_male, self.dataArea_female)
+
+    def get_existIllegalData(self):
+        return self.existsIllegalData
+
+    def __check_illegal__(self):
+        for widget in (self.dataArea_male, self.dataArea_female):
+            if (widget.get_existIllegalData()):
+                return True
+        else:
+            return False
 
 
 class Chars_Editor_Common(QWidget):
@@ -78,7 +93,7 @@ class Chars_Editor_Common(QWidget):
         # 状态信息
         self.charId = charId  # 角色编号，1男2女。
         self.dataBuffer = None
-        self.existsUnlegalData = None
+        self.existsIllegalData = None
         #################################################
 
         # self.health = Float_Line_Edit("血量")
@@ -135,8 +150,8 @@ class Chars_Editor_Common(QWidget):
             data[name] = widget.get_value()
 
         self.dataBuffer = data
-        self.existsUnlegalData = self.__check_legal__()
-        # print(self.dataBuffer, self.existsUnlegalData)
+        self.existsIllegalData = self.__check_illegal__()
+        # print(self.dataBuffer, self.existsIllegalData)
 
     def set_data(self, PlayerData: dict):
         data = self.__data_filter__(PlayerData)
@@ -155,6 +170,9 @@ class Chars_Editor_Common(QWidget):
     def get_data(self):
         return self.dataBuffer
 
+    def get_existIllegalData(self):
+        return self.existsIllegalData
+
     def __data_filter__(self, PlayerData):
         data = dict()
         for key in self.widgets:
@@ -162,12 +180,11 @@ class Chars_Editor_Common(QWidget):
 
         return data
 
-    def __check_legal__(self):
-        value = 0
+    def __check_illegal__(self):
         for widget in self.widgets.values():
-            value += int(widget.is_unlegal())
-
-        return bool(value)
+            if (widget.is_illegal()):
+                return True
+        return False
 
 
 if (__name__ == "__main__"):
