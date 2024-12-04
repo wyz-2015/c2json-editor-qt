@@ -52,6 +52,8 @@ class Chars_Editor(QWidget):
         for dataArea in (self.dataArea_male, self.dataArea_female):
             dataArea.set_data(self.dataBuffer)
 
+        self.existsIllegalData = False
+
     def get_data(self):
         """
         获取当前缓冲区数据的副本。
@@ -65,9 +67,10 @@ class Chars_Editor(QWidget):
                 data[k] = v
 
         self.dataBuffer = data
-        print(self.dataBuffer)
 
         self.existsIllegalData = self.__check_illegal__()
+
+        print(self.dataBuffer, self.existsIllegalData)
 
     def get_widgets(self):
         return (self.dataArea_male, self.dataArea_female)

@@ -202,7 +202,7 @@ class Tuple_Float_Line_Edit(QWidget):
         2种可用类型：(1)dict (2)其他可迭代类型，tuple、list等
         """
         if (type(values) == type(dict())):
-            # 允许2中设值方式，一种通过字典匹配键名设值。好处是允许部分改值
+            # 允许2种设值方式，一种通过字典匹配键名设值。好处是允许部分改值
             for (k, v) in values.items():
                 self.floatLineEdits[k].set_value(v)
         else:
@@ -216,7 +216,7 @@ class Tuple_Float_Line_Edit(QWidget):
         如果填dict，则数据会以{传入时的参数名: 值}的形式返回。
         """
         values = [(self.floatLineEdits[paraName].get_value() if (
-            not self.floatLineEdits[paraName].is_illegal()) else None) for paraName in self.paraNames]
+            not self.floatLineEdits[paraName].is_illegal()) else REPLACEMENT_VALUE) for paraName in self.paraNames]
 
         if (returnType == dict):
             values2 = dict()
@@ -225,6 +225,13 @@ class Tuple_Float_Line_Edit(QWidget):
             return values2
         else:
             return values
+
+    def is_illegal(self):
+        for paraName in self.paraNames:
+            if(self.floatLineEdits[paraName].is_illegal()):
+                return True
+        else:
+            return False
 
 
 if (__name__ == "__main__"):

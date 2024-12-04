@@ -166,6 +166,7 @@ class MainWindow(QMainWindow):
 
         self.set_data_saved(False)
         self.existIllegalData = self.__check_illegal__()
+        print(self.existIllegalData)
 
     def set_data(self, data):
         # 各部分控件载入数据
@@ -178,7 +179,7 @@ class MainWindow(QMainWindow):
 
     def __check_illegal__(self):
         for module in (self.charsEditor, self.metaDataEditor, self.weaponsEditor, self.enemiesEditor):
-            if (module.get_existIllegalData):
+            if (module.get_existIllegalData()):
                 return True
         else:
             return False

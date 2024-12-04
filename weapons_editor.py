@@ -122,9 +122,10 @@ class Weapons_Editor_Common(QWidget):
             data[key] = self.widgets[key].get_value()
 
         self.dataBuffer = data
-        print({self.weaponMetaName: self.dataBuffer})
 
         self.existIllegalData = self.__check_illegal__()
+
+        print({self.weaponMetaName: self.dataBuffer}, self.existIllegalData)
 
     def get_widgets(self):
         return self.widgets
@@ -207,7 +208,6 @@ class Weapons_Editor(QWidget):
             for item in page:
                 if (item["widget"].get_existIllegalData()):
                     return True
-
         else:
             return False
 

@@ -71,9 +71,10 @@ class Enemies_Editor_Common(QWidget):
         data = {paraName: widget.get_value()
                 for (paraName, widget) in self.widgets.items()}
         self.dataBuffer = data
-        print({self.enemyName: self.dataBuffer})
 
         self.existIllegalData = self.__check_illegal__()
+
+        print({self.enemyName: self.dataBuffer}, self.existIllegalData)
 
     def __check_illegal__(self):
         for widget in self.widgets.values():

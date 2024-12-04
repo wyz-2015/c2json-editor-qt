@@ -55,9 +55,10 @@ class Meta_Data_Editor(QWidget):
         # 目前设计里，修改的数据只是传入数据的子集。故无法先本地制造数据dict再行替换，只能直接修改。坏处是无法单独调试本模块，除非传入一块完整的OtherData。
         for (name, widget) in self.widgets.items():
             self.dataBuffer[name] = widget.get_value()
-        print(self.dataBuffer)
 
         self.existIllegalData = self.__check_illegal__()
+
+        print(self.dataBuffer, self.existIllegalData)
 
     def get_widgets(self):
         """
