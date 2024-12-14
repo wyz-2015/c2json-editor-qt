@@ -1,10 +1,12 @@
 # c2json-editor-qt
 
-用`Pyqt5`编写的一款
+用`Pyqt6`编写的一款
 
-> ——《二战前线合集》(*Commando Collections*)(Steam新版)下的《二战前线2》(*Commando 2*)创意工坊(*Workshop*)自定mod导出的json数据的
+——《二战前线合集》(*Commando Collections*)(Steam新版)下的《二战前线2》(*Commando 2*)的
 
->> ——**非官方**修改工具。
+——创意工坊(*Workshop*)自定mod导出的json数据的
+
+————**非官方**修改工具。
 
 是面向别出心裁的、具有探索精神的、想要在mod中尝试给一些对象设定非常规数据的(例如小数、负数)mod制作者的一款编辑工具。
 
@@ -20,7 +22,7 @@
 
 1. 需要`Python >= 3.10`。Windows用户请最好前往[官网](https://www.python.org/)下载安装，在安装过程中，请务必勾选关于 将Python添加到`Path`环境变量 的选项。
 
-2. 需要安装python库`pyqt5`，方法见下：
+2. 需要安装python库`pyqt6`，方法见下：
 
 ### Windows
 
@@ -30,7 +32,7 @@ Windows下默认的python解释器名为`python.exe`，打开`cmd`，键入`pyth
 
 ```
 python -m ensurepip --upgrade
-python -m pip install pyqt5 -i https://mirrors.aliyun.com/pypi/simple/
+python -m pip install pyqt6 -i https://mirrors.aliyun.com/pypi/simple/
 ```
 
 ### Unix-Like
@@ -43,6 +45,6 @@ python -m pip install pyqt5 -i https://mirrors.aliyun.com/pypi/simple/
 
 2. 执行本目录下的`main.py`以启动程序。
 
-2. 用本程序打开json文件并编辑，保存或另存。
+3. 用本程序打开json文件并编辑，保存或另存。
 
-3. 将修改过的json文件导入并覆盖目标mod。
+4. 将修改过的json文件导入并覆盖目标mod。
