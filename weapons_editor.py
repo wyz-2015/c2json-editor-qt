@@ -1,6 +1,6 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt6.QtGui import *
+from PyQt6.QtCore import *
+from PyQt6.QtWidgets import *
 from common_widgets import *
 import json
 
@@ -13,8 +13,8 @@ class Weapons_Nickname(QWidget):
 
         self.lb = QLabel(lbName)
 
-        self.textEdit = QTextEdit()
-        self.textEdit.setLineWrapMode(QTextEdit.NoWrap)
+        self.textEdit = QPlainTextEdit()
+        self.textEdit.setLineWrapMode(QPlainTextEdit.LineWrapMode.NoWrap)
         self.textEdit.setFixedHeight(50)
         self.textEdit.textChanged.connect(self.textChanged)
 
@@ -28,7 +28,7 @@ class Weapons_Nickname(QWidget):
 
     def set_text(self, text: str):
         self.textEdit.blockSignals(True)
-        self.textEdit.setText(text)
+        self.textEdit.setPlainText(text)
         self.textEdit.blockSignals(False)
 
     def get_text(self):

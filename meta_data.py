@@ -1,6 +1,6 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt6.QtGui import *
+from PyQt6.QtCore import *
+from PyQt6.QtWidgets import *
 from common_widgets import *
 
 
@@ -18,7 +18,7 @@ class Meta_Data_Editor(QWidget):
 
         self.lbText = '<span style="text-align: center;">由于模式选择、是否提前解锁所有关卡、是否允许作弊，都是选择性的。</span><br/><span style="text-align: center;">并不需要通过此第三方编辑器来实现填入非常规数据。</span><br/><span style="color: red; text-align: center;">故这几个选项，请回到作为mod制作必经之路的官方编辑器处进行修改。</span>'
         self.lb = QLabel(self.lbText)
-        self.lb.setAlignment(Qt.AlignCenter)
+        self.lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.widgets = {
             "FrameRate": Float_Line_Edit("帧速率"),

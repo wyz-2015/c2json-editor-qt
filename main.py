@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
+from PyQt6.QtWidgets import *
+from PyQt6.QtGui import *
+from PyQt6.QtCore import *
 import sys
 import json
 import pathlib
@@ -19,7 +19,7 @@ class MainWindow(QMainWindow):
         # 状态变量
         # self.resize(1366, 768)
         self.resize(1080, 810)
-        self.title = "Commando 2 创意工坊mod数据编辑器(Qt5)"
+        self.title = "Commando 2 创意工坊mod数据编辑器(Qt6)"
         self.setWindowTitle(self.title)
         self.currentFile = None  # type: pathlib.Path()
         self.currentDir = pathlib.Path().home()
@@ -69,7 +69,7 @@ class MainWindow(QMainWindow):
         # 标签栏
         self.tabWidget = QTabWidget()
         self.tabWidget.setEnabled(False)  # 一开始不能使用，载入了文件才能使用。
-        self.tabWidget.setTabPosition(QTabWidget.North)
+        self.tabWidget.setTabPosition(QTabWidget.TabPosition.North)
 
         # self.charsEditor_title="操控人物数据(PlayerData)"
         self.tabWidget.addTab(self.charsEditor, "操控人物数据(PlayerData)")
@@ -143,15 +143,15 @@ class MainWindow(QMainWindow):
         if (self.saved == False):
             # saved值为None(尚未载入文件)时，也不必提示是否需要保存，直接关闭即可。
             choice = QMessageBox.question(
-                self, "文件尚未保存！", "是否保存了文件再退出？", QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+                self, "文件尚未保存！", "是否保存了文件再退出？", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No | QMessageBox.StandardButton.Cancel)
 
             match choice:
-                case QMessageBox.Yes:
+                case QMessageBox.StandardButton.Yes:
                     if (self.func_btn_save() == -1):
                         event.ignore()
                     else:
                         event.accept()
-                case QMessageBox.No:
+                case QMessageBox.StandardButton.No:
                     event.accept()
                 case _:
                     event.ignore()
@@ -208,17 +208,17 @@ class MainWindow(QMainWindow):
         if (q):
             # q_message = "\n如果您选择“继续”，则意味着您采用了本程序帮您自动补上的数据，随之，整份数据也确实“正确”了。\n是否继续？"
             q_message = "是否继续？"
-            q_choice = (QMessageBox.Yes | QMessageBox.No)
+            q_choice = (QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         else:
             q_message = ""
-            q_choice = QMessageBox.Yes
+            q_choice = QMessageBox.StandardButton.Yes
 
         choice = QMessageBox.warning(self, "警告：存在不正确数据", "您在本份数据的某处，填入了不正确的数据。\n无论如何，至少数据的数字应该∈ℝ。\n已为您暂时将不正确的数据替换为：{0}，只是为了提醒您作出修改。随之，您的数据现在已暂时“正确“。{1:s}".format(
             REPLACEMENT_VALUE, q_message), q_choice)
         match choice:
-            case QMessageBox.Yes:
+            case QMessageBox.StandardButton.Yes:
                 return True
-            case QMessageBox.No:
+            case QMessageBox.StandardButton.No:
                 return False
 
     ##################################
