@@ -1,0 +1,3 @@
+[submodule "tools"]
+	path = tools
+	url = https://github.com/wyz-2015/c2json-tools
