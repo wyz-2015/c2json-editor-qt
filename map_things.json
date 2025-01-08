@@ -1,0 +1,95 @@
+{
+	"enemy_common": {
+		"dest": null,
+		"pos": [null, null],
+		"xscale": {
+			"dest": "图像精灵横向放缩百分比(负数则反向)",
+			"values": -32768
+		},
+		"ammo": {
+			"dest": "掉落子弹包？",
+			"values": {"0 -> int": "False", "1 -> int": "True"}
+		},
+		"food": {
+			"dest": "掉落食物？",
+			"values": {"0 -> int": "false", "1 -> int": "true"}
+		},
+		"boss": {
+			"dest": "是否红怒？",
+			"values": {"0 -> int": "false", "1 -> int": "true"}
+		},
+		"wave": {
+			"dest": "所属波数",
+			"values": -32768
+		},
+		"xMax": {
+			"dest": "向右限定移动范围",
+			"values": {"0 -> int": "不限", "1 -> int": "50", "2 -> int": "100", "3 -> int": "150", "4 -> int": "200", "5 -> int": "250", "6 -> int": "300", "7 -> int": "350", "8 -> int": "400", "9 -> int": "450", "10 -> int": "500"}
+		},
+		"xMin": {
+			"dest": "向左限定移动范围",
+			"values": {"0 -> int": "不限", "1 -> int": "50", "2 -> int": "100", "3 -> int": "150", "4 -> int": "200", "5 -> int": "250", "6 -> int": "300", "7 -> int": "350", "8 -> int": "400", "9 -> int": "450", "10 -> int": "500"}
+		}
+	},
+	"enemy_rem": "具体单位首先以common为基础，并入且覆盖基础\n\"values\"项里的-32768表示是自定数值，没法选择；\"dest\"项，如果留null表示从enemyData获取名字",
+
+	"enemies": {
+		"enemy01": {
+			"vars": [
+				{
+					"key": "atks",
+					"dest": "攻击几次后逃跑",
+					"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+				},
+				{
+					"key": "movNsta", 
+					"dest": "接敌前的状态",
+					"values": {"0 -> int": "慢步(Walk Slow)", "1 -> int": "快步(Walk Fast)", "3 -> int": "立正(Stand Still)", "4 -> int": "交谈(伸手)(Relax1)", "5 -> int": "交谈(站立)(Relax2)"}
+				}
+			]
+		},
+		"enemy01_2": {
+			"dest": "蓝德军(步枪)",
+			"vars": [
+				{
+					"key": "atks",
+					"dest": "攻击几次后逃跑",
+					"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+				},
+				{
+					"key": "movNsta", 
+					"dest": "接敌前的状态",
+					"values": {"0 -> int": "慢步(Walk Slow)", "1 -> int": "快步(Walk Fast)", "3 -> int": "瞄准(Stand Still)", "4 -> int": "交谈(伸手)(Relax1)", "5 -> int": "交谈(站立)(Relax2)"}
+				}
+			]
+		},
+		"enemy01_3": {
+			"dest": "蓝德军(炮兵)",
+			"vars": [
+				{
+					"key": "atks",
+					"dest": "攻击几次后逃跑",
+					"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+				},
+				{
+					"key": "movNsta", 
+					"dest": "接敌前的状态",
+					"values": {"0 -> int": "慢步(Walk Slow)", "1 -> int": "快步(Walk Fast)", "3 -> int": "匍匐(Stand Still)", "4 -> int": "交谈(伸手)(Relax1)", "5 -> int": "交谈(站立)(Relax2)"}
+				}
+			]
+		},
+		"enemy01_3_2": {
+			"dest": "蓝德军(伞兵)",
+			"vars": [
+				{
+					"key": "atks",
+					"dest": "攻击几次后逃跑",
+					"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+				}
+			]
+		}
+	},
+	"objects": {},
+	"others": {},
+	"topographies": {}
+}
