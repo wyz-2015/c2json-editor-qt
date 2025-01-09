@@ -1,18 +1,23 @@
+"""
+在json数据与图形界面所示之间的一层中间表示与编译系统。
+"""
 import copy
 import json
 import sys
+# import ast
 
 
-class IR():
+class Encoder():
     """
-    在json数据与图形界面所示之间的一层中间表示与编译系统。
+    从模板json文件读取，并转化为IR的模板
     """
 
     def __init__(self):
         ##########################
         # 读入数据模板
         self._templateJson = self.__template_read__()
-        self.__typeDict__ = {"int": int, "bool": __str2bool__}  # 表示类型的特定字符串与对应转换函数或类之间的对应关系
+        # 表示类型的特定字符串与对应转换函数或类之间的对应关系
+        self.__typeDict__ = {"int": int, "bool": self.__str2bool__, "str": str}
         self.__enemyNameDict__ = self.__enemyNameDict_read__()
 
     def __template_read__(self):
@@ -47,16 +52,18 @@ class IR():
         #        case _:
         #            obj[k_parent] = v_parent
         self.__buildEmptyEnemyIR_DFS1__(obj)
-        print("DFS1处理后的对象：\n{0}".format(obj))
+        # print("DFS1处理后的对象：\n{0}".format(obj))
         self.__buildEmptyEnemyIR_DFS2__(obj)
-        print("DFS2处理后的对象：\n{0}".format(obj))
+        # print("DFS2处理后的对象：\n{0}".format(obj))
 
-        # 3
+        # 33
         # 杂项处理
         if (obj["dest"] == None):
             enemy = self.__enemyNameDict__.get(enemyName, None)
             if (enemy):
                 obj["dest"] = enemy["dest"]
+
+        obj["name"] = enemyName  # 加上主键，怎么最容易被忘记呢？
 
         return obj
 
@@ -77,9 +84,9 @@ class IR():
                     obj[k] = self.__dict_convert1__(v)
 
                     # 给在只能值字典中选择(只能选不能自定)的参数，赋予None初值
-                    obj["{0:s}_current".format(k)] = None
-                elif(v==-32768):
-                    obj["{0:s}_current".format(k)] = None
+                    obj["{0:s}_current".format(k)] = 0
+                elif (v == -32768):
+                    obj["{0:s}_current".format(k)] = 0
                 else:  # 否则向下递归
                     self.__buildEmptyEnemyIR_DFS1__(v)
         elif (type(obj) == type(list())):  # 若遇到一般的可迭代对象等，json中的数组默认只会转换为list。json中只有数组，没有集合。
@@ -138,6 +145,10 @@ class IR():
         return newDict
 
     def __dict_convert2__(self, varList: list) -> dict:
+        """
+        将现版本json文件的vars列表："vars": [{"A": ...}, {"B": ...}]
+        转化为IR格式的："vars": {"varNameList": ["A", "B"], "A": {"A": ...}, "B": {"B": ...}}
+        """
         varNameList = [var["key"] for var in varList]
         newVars = dict()
         newVars["varNameList"] = varNameList
@@ -146,19 +157,110 @@ class IR():
 
         return newVars
 
-def __str2bool__(s: str):
-    match s.lower():
-        case "true":
-            return True
-        case "false":
-            return False
-        case _:
-            print("“{0:s}”不是表示“True”或“False”的单词！".format(s))
-            sys.exit(1)
+    def __str2bool__(s: str) -> bool:
+        match s.lower():
+            case "true":
+                return True
+            case "false":
+                return False
+            case _:
+                print("“{0:s}”不是表示“True”或“False”的单词！".format(s))
+                sys.exit(1)
+
+    def mergeEnemyDataFromJson(self, enemyObjKV):
+        """
+        KV指(k, v)键值对，它们不一定是tuple，故未作限定
+        """
+        (enemyObjK, enemyObjV) = enemyObjKV
+        (enemyName, x, y) = enemyObjK.split(">")
+        # x = ast.literal_eval(x)
+        # y = ast.literal_eval(y)
+        x = self.__str2mathNum__(x)
+        y = self.__str2mathNum__(y)
+
+        enemyIRObj = self.buildEmptyEnemyIR(enemyName=enemyName)
+        enemyIRObj["pos"] = [x, y]
+
+        self.__mergeEnemyDataFromJson_DFS__(enemyObjV, enemyIRObj)
+
+        return enemyIRObj
+
+    def __mergeEnemyDataFromJson_DFS__(self, obj_js, obj_ir):
+        if (type(obj_js) == type(dict())):
+            for k in obj_js.copy():
+                self.__mergeEnemyDataFromJson_DFS__(obj_js[k], obj_ir[k])
+        elif (type(obj_js) == type(list())):
+            for i in obj_js:
+                obj_ir[i["key"]]["values_current"] = i["value"]
+        else:
+            obj_ir["values_current"] = obj_js
+
+    # def convertEnemyModJsonDict2IR(self, _dict: dict):
+    #    _dict = copy.deepcopy(_dict)
+    #
+    # def __convertEnemyModJsonDict2IR_DFS__(self, obj):
+    #    if (type(obj) == type(list())):
+    #        for i in obj:
+    #            self.__convertEnemyModJsonDict2IR_DFS__(i)
+    #    elif (type(obj) == type(dict())):
+    #        for (k, v) in obj.copy().items():
+    #            pass
+
+    def __str2mathNum__(self, s: str):
+        (i, f) = (int(s), float(s))
+        if (i == f):
+            return i
+        else:
+            return f
+
+    def __mod_json_read__(self):
+        with open(filename, "rt", encoding="utf-8") as jsonfile:
+            return json.load(jsonfile).get("LevelData")
+
+
+class IR():
+    """
+    IR化数据的处理中心
+    """
+
+    def __init__(self):
+        self.dataBuffer = dict()
+
+
+class JsonDictCompiler():
+    """
+    从IR编译生成适用于mod json文件的数据
+    """
+
+    def __init__(self):
+        pass
+
+    def buildEnemyDict4Json(self, enemyIRObj: dict, n: int = 0) -> dict:
+        """
+        由中间表示(IR)，向适配游戏的json对象转换。
+        enemyIRObj：IR格式的敌人对象
+        n：用于处理重叠的单位，默认0则生成整数，否则取小数点后n位。如n=0时，enemy01>114>514；n=1时,enemy01>114>514.0
+        因为是IR，是固定格式，所以敢写死。
+        """
+        jsonObj = dict()
+
+        if (n):
+            keyNameFmt = "{0:s}>{1:.%uf}>{2:n}" % (n)
+        else:
+            keyNameFmt = "{0:s}>{1:n}>{2:n}"
+        (x, y) = enemyIRObj["pos"]
+        keyName = keyNameFmt.format(enemyIRObj["name"], x, y)
 
 
 if (__name__ == "__main__"):
-    i = IR()
-    enemy = "enemy01_2"
-    print("\n\n{0:s}对象的中间表示空模板为：\n{1}".format(
-        enemy, i.buildEmptyEnemyIR(enemy)))
+    i = Encoder()
+    # enemy = "enemy01_2"
+    # enemies = ["enemy%02d" % (i) for i in range(1, 43+1)]
+    # enemies.remove("enemy24")
+    # for enemy in enemies:
+    #    print("\n\n{0:s}对象的中间表示空模板为：\n{1}".format(
+    #        enemy, i.buildEmptyEnemyIR(enemy)))
+
+    enemyData = ("enemy12>102>98", {"ammo": 1, "boss": 1, "vars": [{"key": "atks", "value": 1}, {
+                 "key": "movNsta", "value": 0}], "xMax": {"value": 6}, "xMin": {"value": 1}, "xscale": 100})
+    print(i.mergeEnemyDataFromJson(enemyData))

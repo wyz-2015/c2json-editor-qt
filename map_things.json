@@ -1,5 +1,6 @@
 {
 	"enemy_common": {
+		"name": null,
 		"dest": null,
 		"pos": [null, null],
 		"xscale": {
@@ -23,13 +24,18 @@
 			"values": -32768
 		},
 		"xMax": {
-			"dest": "向右限定移动范围",
-			"values": {"0 -> int": "不限", "1 -> int": "50", "2 -> int": "100", "3 -> int": "150", "4 -> int": "200", "5 -> int": "250", "6 -> int": "300", "7 -> int": "350", "8 -> int": "400", "9 -> int": "450", "10 -> int": "500"}
+			"value": {
+				"dest": "向右限定移动范围",
+				"values": {"0 -> int": "不限", "1 -> int": "50", "2 -> int": "100", "3 -> int": "150", "4 -> int": "200", "5 -> int": "250", "6 -> int": "300", "7 -> int": "350", "8 -> int": "400", "9 -> int": "450", "10 -> int": "500"}
+			}
 		},
 		"xMin": {
-			"dest": "向左限定移动范围",
-			"values": {"0 -> int": "不限", "1 -> int": "50", "2 -> int": "100", "3 -> int": "150", "4 -> int": "200", "5 -> int": "250", "6 -> int": "300", "7 -> int": "350", "8 -> int": "400", "9 -> int": "450", "10 -> int": "500"}
-		}
+			"value": {
+				"dest": "向左限定移动范围",
+				"values": {"0 -> int": "不限", "1 -> int": "50", "2 -> int": "100", "3 -> int": "150", "4 -> int": "200", "5 -> int": "250", "6 -> int": "300", "7 -> int": "350", "8 -> int": "400", "9 -> int": "450", "10 -> int": "500"}
+			}
+		},
+		"rem": "修改此字符串以添加注释。"
 	},
 	"enemy_rem": "具体单位首先以common为基础，并入且覆盖基础\n\"values\"项里的-32768表示是自定数值，没法选择；\"dest\"项，如果留null表示从enemyData获取名字",
 
@@ -44,7 +50,7 @@
 				{
 					"key": "movNsta", 
 					"dest": "接敌前的状态",
-					"values": {"0 -> int": "慢步(Walk Slow)", "1 -> int": "快步(Walk Fast)", "3 -> int": "立正(Stand Still)", "4 -> int": "交谈(伸手)(Relax1)", "5 -> int": "交谈(站立)(Relax2)"}
+					"values": {"0 -> int": "慢步(Walk Slow)", "1 -> int": "快步(Walk Fast)", "2 -> int": "立正(Stand Still)", "3 -> int": "交谈(伸手)(Relax1)", "4 -> int": "交谈(站立)(Relax2)"}
 				}
 			]
 		},
@@ -59,7 +65,7 @@
 				{
 					"key": "movNsta", 
 					"dest": "接敌前的状态",
-					"values": {"0 -> int": "慢步(Walk Slow)", "1 -> int": "快步(Walk Fast)", "3 -> int": "瞄准(Stand Still)", "4 -> int": "交谈(伸手)(Relax1)", "5 -> int": "交谈(站立)(Relax2)"}
+					"values": {"0 -> int": "慢步(Walk Slow)", "1 -> int": "快步(Walk Fast)", "2 -> int": "瞄准(Stand Still)", "3 -> int": "交谈(伸手)(Relax1)", "4 -> int": "交谈(站立)(Relax2)"}
 				}
 			]
 		},
@@ -74,7 +80,7 @@
 				{
 					"key": "movNsta", 
 					"dest": "接敌前的状态",
-					"values": {"0 -> int": "慢步(Walk Slow)", "1 -> int": "快步(Walk Fast)", "3 -> int": "匍匐(Stand Still)", "4 -> int": "交谈(伸手)(Relax1)", "5 -> int": "交谈(站立)(Relax2)"}
+					"values": {"0 -> int": "慢步(Walk Slow)", "1 -> int": "快步(Walk Fast)", "2 -> int": "匍匐(Stand Still)", "3 -> int": "交谈(伸手)(Relax1)", "4 -> int": "交谈(站立)(Relax2)"}
 				}
 			]
 		},
@@ -87,9 +93,485 @@
 					"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
 				}
 			]
+		},
+		"enemy02": {},
+		"enemy03": {},
+		"enemy03_2": {},
+		"enemy03_3": {},
+		"enemy03_4": {},
+		"enemy04": {},
+		"enemy05": {
+			"vars": [
+				{
+					"key": "atks",
+					"dest": "攻击几次后逃跑",
+					"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+				},
+				{
+					"key": "movNsta", 
+					"dest": "接敌前的状态",
+					"values": {"0 -> int": "巡逻(Patrol)", "1 -> int": "快步(Walk Fast)", "2 -> int": "立正(Stand Still)"}
+				}
+			]
+		},
+		"enemy05_2": {
+			"vars": [
+				{
+					"key": "atks",
+					"dest": "攻击几次后逃跑",
+					"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+				},
+				{
+					"key": "movNsta", 
+					"dest": "接敌前的状态",
+					"values": {"0 -> int": "巡逻(Patrol)", "1 -> int": "快步(Walk Fast)", "2 -> int": "立正(Stand Still)"}
+				}
+			]
+		},
+		"enemy06": {},
+		"enemy07": {},
+		"enemy08": {},
+		"enemy09": {},
+		"enemy10": {},
+		"enemy11": {},
+		"enemy12": {
+			"vars": [
+				{
+					"key": "atks",
+					"dest": "攻击几次后逃跑",
+					"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+				},
+				{
+					"key": "movNsta", 
+					"dest": "接敌前的状态",
+					"values": {"0 -> int": "慢步(Walk Slow)", "1 -> int": "快步(Walk Fast)", "2 -> int": "立正(Stand Still)", "3 -> int": "蹲下(Crouch)", "4 -> int": "匍匐(Prone)", "5 -> int": "站睡(Relax1)", "6 -> int": "坐睡(Relax2)", "7 -> int": "饮酒(Relax3)", "8 -> int": "扇风(Relax4)", "9 -> int": "聊天(Relax5)", "10 -> int": "钓鱼(Relax6)", "11 -> int": "打牌(Relax7)"}
+				}
+			]
+		},
+		"enemy12_2": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "接敌前的状态",
+					"values": {"0 -> int": "待机(Relax)", "1 -> int": "直出(Rush Out)"}
+				}
+			]
+		},
+		"enemy13": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "接敌前的状态",
+					"values": {"0 -> int": "停车(Parked)", "1 -> int": "冲撞(Ramming)"}
+				}
+			]
+		},
+		"enemy14": {
+			"vars": [
+				{
+					"key": "movNsta", 
+					"dest": "接敌前的状态",
+					"values": {"0 -> int": "快步(Walk Fast)", "1 -> int": "立正(Stand Still)", "2 -> int": "匍匐(Prone)"}
+				}
+			]
+		},
+		"enemy15": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "接敌前的状态",
+					"values": {"0 -> int": "停车(Parked)", "1 -> int": "冲撞(Ramming)"}
+				}
+			]
+		},
+		"enemy16": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "接敌前的状态",
+					"values": {"0 -> int": "停车(Parked)", "1 -> int": "冲撞(Ramming)"}
+				}
+			]
+		},
+		"enemy17": {
+			"dest": "碉堡日军士兵"
+		},
+		"enemy17_2": {
+			"dest": "碉堡贾队长"
+		},
+		"enemy18": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "接敌前的状态",
+					"values": {"0 -> int": "待机(Relax)", "1 -> int": "直出(Guarding)"}
+				}
+			]
+		},
+		"enemy19": {
+			"dest": "竹林伏兵"
+		},
+		"enemy20": {},
+		"enemy21": {
+			"dest": "上海滩轿车(红)",
+			"state": {
+				"dest": "意义不明",
+				"values": {"stand -> str": "意义不明"}
+			}
+		},
+		"enemy21_2": {
+			"dest": "上海滩轿车(灰)"
+		},
+		"enemy22": {
+			"dest": "红木大桌"
+		},
+		"enemy22_2": {
+			"dest": "红木四门柜"
+		},
+		"enemy22_3": {
+			"dest": "红木横柜"
+		},
+		"enemy22_4": {
+			"dest": "红木二门柜"
+		},
+		"enemy22_5": {
+			"dest": "红木二门柜(斜)"
+		},
+		"enemy22_6": {
+			"dest": "红木椅子"
+		},
+		"enemy22_8": {
+			"dest": "电话亭"
+		},
+		"enemy22_9": {
+			"dest": "“小心地滑”"
+		},
+		"enemy22_13": {
+			"dest": "房屋(大钱庄)"
+		},
+		"enemy22_14": {
+			"dest": "房屋(高级饭店)"
+		},
+		"enemy22_15": {
+			"dest": "房屋(草药店)"
+		},
+		"enemy23": {
+			"boss": {
+				"dest": "吕布体验卡",
+				"values": {"0 -> int": "false", "1 -> int": "true"}
+			}
+		},
+		"enemy25": {
+			"dest": "藏队长的桶"
+		},
+		"enemy26": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "接敌前的状态",
+					"values": {"0 -> int": "快步(Walk Fast)", "1 -> int": "架枪(Stand Still)"}
+				}
+			]
+		},
+		"enemy27": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "接敌前的状态",
+					"values": {"0 -> int": "待机(Relax)", "1 -> int": "直出(Rush Out)"}
+				}
+			]
+		},
+		"enemy28": {
+			"dest": "大石球"
+		},
+		"enemy28_2": {
+			"dest": "石方块"
+		},
+		"enemy29": {},
+		"enemy30": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "出场方式",
+					"values": {"0 -> int": "黄包车中(Rickshaw)", "1 -> int": "直出(Direct)"}
+				}
+			]
+		},
+		"enemy31": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "出场状态",
+					"values": {"0 -> int": "蹲(Crouch)", "1 -> int": "匍匐(Prone)"}
+				}
+			]
+		},
+		"enemy32": {},
+		"enemy33": {},
+		"enemy34": {},
+		"enemy35": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "接敌前的状态",
+					"values": {"0 -> int": "中立(Resting on Land)", "1 -> int": "敌意(Crawling on Land)", "2 -> int": "空游无所依(Swimming Underwater)"}
+				}
+			]
+		},
+		"enemy36": {
+			"dest": "电网"
+		},
+		"enemy37": {
+			"dest": "上横板下按钮"
+		},
+		"enemy37_2": {
+			"dest": "下横板上按钮"
+		},
+		"enemy38": {},
+		"enemy38_2": {
+			"dest": "激光(斜射)"
+		},
+		"enemy39": {},
+		"enemy40": {},
+		"enemy41": {
+			"dest": "树上的椰子"
+		},
+		"enemy41_2": {
+			"dest": "树上的香蕉"
+		},
+		"enemy42": {},
+		"enemy43": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "接敌前状态",
+					"values": {"0 -> int": "快步(Walk Fast)", "1 -> int": "站立(Stang Still)"}
+				}
+			]
+		},
+		"enemy43_2": {
+			"dest": "原住民(爬树)",
+			"vars": [
+				{
+					"key": "yMax",
+					"dest": "爬升高度",
+					"values": {"0 -> int": "100", "1 -> int": "150", "2 -> int": "200", "3 -> int": "250"}
+				}
+			]
+		},
+		"enemy44": {},
+		"enemy45": {},
+		"enemy46": {},
+		"enemy47": {},
+		"enemy48": {},
+		"enemy49": {}
+	},
+
+	"object_common": {
+		"name": null,
+		"dest": null
+		"pos": [null, null],
+		"xscale": {
+			"dest": "图像精灵横向放缩百分比(负数则反向)",
+			"values": -32768
+		},
+		"ammo": {
+			"dest": "掉落子弹包？",
+			"values": {"0 -> int": "False", "1 -> int": "True"}
+		},
+		"food": {
+			"dest": "掉落食物？",
+			"values": {"0 -> int": "false", "1 -> int": "true"}
 		}
 	},
-	"objects": {},
-	"others": {},
+
+	"objects": {
+		"object01": {
+			"dest": "沙袋"
+		},
+		"object02": {
+			"dest": "小船"
+		},
+		"object03": {
+			"dest": "炸弹小屋"
+		},
+		"object04": {
+			"dest": "木箱"
+		},
+		"object05": {
+			"dest": "静止铁桶"
+		},
+		"object06": {
+			"dest": "屏风"
+		},
+		"object07": {
+			"dest": "铁箱"
+		},
+		"object08": {
+			"dest": "花盆(红)"
+		},
+		"object08_2": {
+			"dest": "花盆(黄)"
+		},
+		"object08_3": {
+			"dest": "花盆(蓝)"
+		},
+		"object09": {
+			"dest": "水下拦截网"
+		},
+		"object10": {
+			"dest": "ππ"
+		},
+		"object10_2": {
+			"dest": "ΠΠ"
+		},
+		"object10_3": {
+			"dest": "∠"
+		},
+		"object10_4": {
+			"dest": "-="
+		},
+		"object10_5": {
+			"dest": "Π"
+		},
+		"object11": {
+			"dest": "细木跳台(14节)"
+		},
+		"object11_2": {
+			"dest": "细木跳台(10节)"
+		},
+		"object11_3": {
+			"dest": "细木跳台(8节)"
+		},
+		"object11_4": {
+			"dest": "细木跳台(6节)"
+		},
+		"object11_5": {
+			"dest": "细木跳台(3节)"
+		},
+		"object11_6": {
+			"dest": "粗木跳台(14节)"
+		},
+		"object11_7": {
+			"dest": "粗木跳台(11节)"
+		},
+		"object11_8": {
+			"dest": "粗木跳台(7.5节)"
+		},
+		"object12": {
+			"dest": "大锅"
+		},
+		"object13": {
+			"dest": "日军吊人"
+		},
+		"object13_2": {
+			"dest": "德军吊人"
+		},
+		"object14": {
+			"dest": "导弹运载车"
+		},
+		"object15": {
+			"dest": "毒雾(>)"
+		},
+		"object15_2": {
+			"dest": "毒雾(<)"
+		},
+		"object16": {
+			"dest": "卡车(BOSS战)"
+		},
+		"object17": {
+			"dest": "马"
+		},
+		"object18": {
+			"dest": "象"
+		},
+		"object19": {
+			"dest": "Hi-Do直升机"
+		},
+		"object20": {
+			"dest": "火车头"
+		},
+		"object20_2": {
+			"dest": "火车节(客运)"
+		},
+		"object20_3": {
+			"dest": "火车节(煤)"
+		},
+		"object20_4": {
+			"dest": "火车节(木料)"
+		},
+		"object20_5": {
+			"dest": "火车节(铁箱)"
+		}
+	
+	},
+
+	"other_common": {
+		"name": null,
+		"dest": null
+		"pos": [null, null],
+		"xscale": {
+			"dest": "图像精灵横向放缩百分比(负数则反向)",
+			"values": -32768
+		}	
+	},
+	"others": {
+		"other01": {
+			"dest": "cxk"
+		},
+		"other02": {
+			"dest": "小cxk"
+		},
+		"other03": {
+			"dest": "猪"
+		},
+		"other04": {
+			"dest": "鹭"
+		},
+		"other05": {
+			"dest": "龟"
+		},
+		"other06": {
+			"dest": "鱼"
+		},
+		"other07": {
+			"dest": "水鸟(原作者称)"
+		},
+		"other08": {
+			"dest": "蝠"
+		},
+		"other09": {
+			"dest": "熊猫"
+		},
+		"other10": {
+			"dest": "掌柜(胖)"
+		},
+		"other11": {
+			"dest": "掌柜(瘦)"
+		},
+		"other12": {
+			"dest": "新郎"
+		},
+		"other13": {
+			"dest": "新娘"
+		},
+		"other14": {
+			"dest": "居民(老人)"
+		},
+		"other15": {
+			"dest": "居民(男青年)"
+		},
+		"other16": {
+			"dest": "居民(女青年)"
+		},
+		"other17": {
+			"dest": "蛇"
+		},
+		"other100": {
+			"dest": "隐藏点"
+		}
+	},
+
 	"topographies": {}
 }
