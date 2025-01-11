@@ -2,7 +2,7 @@
 	"enemy_common": {
 		"name": null,
 		"dest": null,
-		"pos": [null, null],
+		"pos": [0, 0],
 		"xscale": {
 			"dest": "图像精灵横向放缩百分比(负数则反向)",
 			"values": -32768
@@ -45,12 +45,16 @@
 				{
 					"key": "atks",
 					"dest": "攻击几次后逃跑",
-					"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+					"value": {
+						"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+					}
 				},
 				{
 					"key": "movNsta", 
 					"dest": "接敌前的状态",
-					"values": {"0 -> int": "慢步(Walk Slow)", "1 -> int": "快步(Walk Fast)", "2 -> int": "立正(Stand Still)", "3 -> int": "交谈(伸手)(Relax1)", "4 -> int": "交谈(站立)(Relax2)"}
+					"value": {
+						"values": {"0 -> int": "慢步(Walk Slow)", "1 -> int": "快步(Walk Fast)", "2 -> int": "立正(Stand Still)", "3 -> int": "交谈(伸手)(Relax1)", "4 -> int": "交谈(站立)(Relax2)"}
+					}
 				}
 			]
 		},
@@ -60,12 +64,16 @@
 				{
 					"key": "atks",
 					"dest": "攻击几次后逃跑",
-					"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+					"value": {
+						"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+					}
 				},
 				{
 					"key": "movNsta", 
 					"dest": "接敌前的状态",
-					"values": {"0 -> int": "慢步(Walk Slow)", "1 -> int": "快步(Walk Fast)", "2 -> int": "瞄准(Stand Still)", "3 -> int": "交谈(伸手)(Relax1)", "4 -> int": "交谈(站立)(Relax2)"}
+					"value": {
+						"values": {"0 -> int": "慢步(Walk Slow)", "1 -> int": "快步(Walk Fast)", "2 -> int": "瞄准(Stand Still)", "3 -> int": "交谈(伸手)(Relax1)", "4 -> int": "交谈(站立)(Relax2)"}
+					}
 				}
 			]
 		},
@@ -75,12 +83,16 @@
 				{
 					"key": "atks",
 					"dest": "攻击几次后逃跑",
-					"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+					"value": {
+						"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+					}
 				},
 				{
 					"key": "movNsta", 
 					"dest": "接敌前的状态",
-					"values": {"0 -> int": "慢步(Walk Slow)", "1 -> int": "快步(Walk Fast)", "2 -> int": "匍匐(Stand Still)", "3 -> int": "交谈(伸手)(Relax1)", "4 -> int": "交谈(站立)(Relax2)"}
+					"value": {
+						"values": {"0 -> int": "慢步(Walk Slow)", "1 -> int": "快步(Walk Fast)", "2 -> int": "匍匐(Stand Still)", "3 -> int": "交谈(伸手)(Relax1)", "4 -> int": "交谈(站立)(Relax2)"}
+					}
 				}
 			]
 		},
@@ -90,7 +102,9 @@
 				{
 					"key": "atks",
 					"dest": "攻击几次后逃跑",
-					"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+					"value": {
+						"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+					}
 				}
 			]
 		},
@@ -105,12 +119,16 @@
 				{
 					"key": "atks",
 					"dest": "攻击几次后逃跑",
-					"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+					"value": {
+						"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+					}
 				},
 				{
 					"key": "movNsta", 
 					"dest": "接敌前的状态",
-					"values": {"0 -> int": "巡逻(Patrol)", "1 -> int": "快步(Walk Fast)", "2 -> int": "立正(Stand Still)"}
+					"value": {
+						"values": {"0 -> int": "巡逻(Patrol)", "1 -> int": "快步(Walk Fast)", "2 -> int": "立正(Stand Still)"}
+					}
 				}
 			]
 		},
@@ -119,12 +137,16 @@
 				{
 					"key": "atks",
 					"dest": "攻击几次后逃跑",
-					"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+					"value": {
+						"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+					}
 				},
 				{
 					"key": "movNsta", 
 					"dest": "接敌前的状态",
-					"values": {"0 -> int": "巡逻(Patrol)", "1 -> int": "快步(Walk Fast)", "2 -> int": "立正(Stand Still)"}
+					"value": {
+						"values": {"0 -> int": "巡逻(Patrol)", "1 -> int": "快步(Walk Fast)", "2 -> int": "立正(Stand Still)"}
+					}
 				}
 			]
 		},
@@ -139,12 +161,16 @@
 				{
 					"key": "atks",
 					"dest": "攻击几次后逃跑",
-					"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+					"value": {
+						"values": {"0 -> int": "15", "1 -> int": "30", "2 -> int": "99"}
+					}
 				},
 				{
 					"key": "movNsta", 
 					"dest": "接敌前的状态",
-					"values": {"0 -> int": "慢步(Walk Slow)", "1 -> int": "快步(Walk Fast)", "2 -> int": "立正(Stand Still)", "3 -> int": "蹲下(Crouch)", "4 -> int": "匍匐(Prone)", "5 -> int": "站睡(Relax1)", "6 -> int": "坐睡(Relax2)", "7 -> int": "饮酒(Relax3)", "8 -> int": "扇风(Relax4)", "9 -> int": "聊天(Relax5)", "10 -> int": "钓鱼(Relax6)", "11 -> int": "打牌(Relax7)"}
+					"value": {
+						"values": {"0 -> int": "慢步(Walk Slow)", "1 -> int": "快步(Walk Fast)", "2 -> int": "立正(Stand Still)", "3 -> int": "蹲下(Crouch)", "4 -> int": "匍匐(Prone)", "5 -> int": "站睡(Relax1)", "6 -> int": "坐睡(Relax2)", "7 -> int": "饮酒(Relax3)", "8 -> int": "扇风(Relax4)", "9 -> int": "聊天(Relax5)", "10 -> int": "钓鱼(Relax6)", "11 -> int": "打牌(Relax7)"}
+					}
 				}
 			]
 		},
@@ -153,7 +179,9 @@
 				{
 					"key": "movNsta",
 					"dest": "接敌前的状态",
-					"values": {"0 -> int": "待机(Relax)", "1 -> int": "直出(Rush Out)"}
+					"value": {
+						"values": {"0 -> int": "待机(Relax)", "1 -> int": "直出(Rush Out)"}
+					}
 				}
 			]
 		},
@@ -162,7 +190,9 @@
 				{
 					"key": "movNsta",
 					"dest": "接敌前的状态",
-					"values": {"0 -> int": "停车(Parked)", "1 -> int": "冲撞(Ramming)"}
+					"value": {
+						"values": {"0 -> int": "停车(Parked)", "1 -> int": "冲撞(Ramming)"}
+					}
 				}
 			]
 		},
@@ -171,7 +201,9 @@
 				{
 					"key": "movNsta", 
 					"dest": "接敌前的状态",
-					"values": {"0 -> int": "快步(Walk Fast)", "1 -> int": "立正(Stand Still)", "2 -> int": "匍匐(Prone)"}
+					"value": {
+						"values": {"0 -> int": "快步(Walk Fast)", "1 -> int": "立正(Stand Still)", "2 -> int": "匍匐(Prone)"}
+					}
 				}
 			]
 		},
@@ -180,7 +212,9 @@
 				{
 					"key": "movNsta",
 					"dest": "接敌前的状态",
-					"values": {"0 -> int": "停车(Parked)", "1 -> int": "冲撞(Ramming)"}
+					"value": {
+						"values": {"0 -> int": "停车(Parked)", "1 -> int": "冲撞(Ramming)"}
+					}
 				}
 			]
 		},
@@ -189,7 +223,9 @@
 				{
 					"key": "movNsta",
 					"dest": "接敌前的状态",
-					"values": {"0 -> int": "停车(Parked)", "1 -> int": "冲撞(Ramming)"}
+					"value": {
+						"values": {"0 -> int": "停车(Parked)", "1 -> int": "冲撞(Ramming)"}
+					}
 				}
 			]
 		},
@@ -204,7 +240,9 @@
 				{
 					"key": "movNsta",
 					"dest": "接敌前的状态",
-					"values": {"0 -> int": "待机(Relax)", "1 -> int": "直出(Guarding)"}
+					"value": {
+						"values": {"0 -> int": "待机(Relax)", "1 -> int": "直出(Guarding)"}
+					}
 				}
 			]
 		},
@@ -269,7 +307,9 @@
 				{
 					"key": "movNsta",
 					"dest": "接敌前的状态",
-					"values": {"0 -> int": "快步(Walk Fast)", "1 -> int": "架枪(Stand Still)"}
+					"value": {
+						"values": {"0 -> int": "快步(Walk Fast)", "1 -> int": "架枪(Stand Still)"}
+					}
 				}
 			]
 		},
@@ -278,7 +318,9 @@
 				{
 					"key": "movNsta",
 					"dest": "接敌前的状态",
-					"values": {"0 -> int": "待机(Relax)", "1 -> int": "直出(Rush Out)"}
+					"value": {
+						"values": {"0 -> int": "待机(Relax)", "1 -> int": "直出(Rush Out)"}
+					}
 				}
 			]
 		},
@@ -294,7 +336,9 @@
 				{
 					"key": "movNsta",
 					"dest": "出场方式",
-					"values": {"0 -> int": "黄包车中(Rickshaw)", "1 -> int": "直出(Direct)"}
+					"value": {
+						"values": {"0 -> int": "黄包车中(Rickshaw)", "1 -> int": "直出(Direct)"}
+					}
 				}
 			]
 		},
@@ -303,7 +347,9 @@
 				{
 					"key": "movNsta",
 					"dest": "出场状态",
-					"values": {"0 -> int": "蹲(Crouch)", "1 -> int": "匍匐(Prone)"}
+					"value": {
+						"values": {"0 -> int": "蹲(Crouch)", "1 -> int": "匍匐(Prone)"}
+					}
 				}
 			]
 		},
@@ -315,7 +361,9 @@
 				{
 					"key": "movNsta",
 					"dest": "接敌前的状态",
-					"values": {"0 -> int": "中立(Resting on Land)", "1 -> int": "敌意(Crawling on Land)", "2 -> int": "空游无所依(Swimming Underwater)"}
+					"value": {
+						"values": {"0 -> int": "中立(Resting on Land)", "1 -> int": "敌意(Crawling on Land)", "2 -> int": "空游无所依(Swimming Underwater)"}
+					}
 				}
 			]
 		},
@@ -346,7 +394,9 @@
 				{
 					"key": "movNsta",
 					"dest": "接敌前状态",
-					"values": {"0 -> int": "快步(Walk Fast)", "1 -> int": "站立(Stang Still)"}
+					"value": {
+						"values": {"0 -> int": "快步(Walk Fast)", "1 -> int": "站立(Stang Still)"}
+					}
 				}
 			]
 		},
@@ -356,7 +406,9 @@
 				{
 					"key": "yMax",
 					"dest": "爬升高度",
-					"values": {"0 -> int": "100", "1 -> int": "150", "2 -> int": "200", "3 -> int": "250"}
+					"value": {
+						"values": {"0 -> int": "100", "1 -> int": "150", "2 -> int": "200", "3 -> int": "250"}
+					}
 				}
 			]
 		},
@@ -370,7 +422,7 @@
 
 	"object_common": {
 		"name": null,
-		"dest": null
+		"dest": null,
 		"pos": [null, null],
 		"xscale": {
 			"dest": "图像精灵横向放缩百分比(负数则反向)",
@@ -509,7 +561,7 @@
 
 	"other_common": {
 		"name": null,
-		"dest": null
+		"dest": null,
 		"pos": [null, null],
 		"xscale": {
 			"dest": "图像精灵横向放缩百分比(负数则反向)",
@@ -573,5 +625,6 @@
 		}
 	},
 
-	"topographies": {}
+	"topographies": {},
+	"screen_size": [591, 401]
 }

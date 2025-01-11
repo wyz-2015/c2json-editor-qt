@@ -9,7 +9,7 @@ import sys
 
 class Encoder():
     """
-    从模板json文件读取，并转化为IR的模板
+    从模板json文件读取对象，并转化为IR的格式
     """
 
     def __init__(self):
@@ -33,7 +33,8 @@ class Encoder():
 
     def buildEmptyEnemyIR(self, enemyName: str) -> dict:
         obj = copy.deepcopy(self._templateJson["enemy_common"])
-        obj.update(self._templateJson["enemies"][enemyName])
+        # Warning: update方法也需要考虑是否使用深拷贝！若未拷贝，传的参仅为指针，修改一次即已变动。造成本函数“一次性”的BUG。
+        obj.update(copy.deepcopy(self._templateJson["enemies"][enemyName]))
         # print(obj)
         # for (k_parent, v_parent) in obj:
         #    if (type(v_parent) == type(dict())):
@@ -56,7 +57,7 @@ class Encoder():
         self.__buildEmptyEnemyIR_DFS2__(obj)
         # print("DFS2处理后的对象：\n{0}".format(obj))
 
-        # 33
+        #######################################################
         # 杂项处理
         if (obj["dest"] == None):
             enemy = self.__enemyNameDict__.get(enemyName, None)
@@ -72,7 +73,7 @@ class Encoder():
         利用DFS递归转换处理json文件中的数据。
         1. 处理值字典
         """
-        # print(type(obj))
+        # print(obj)
         if (type(obj) == type(dict())):
             # print(self.__is_selectable_values_dict__(obj))
             # if (self.__is_selectable_values_dict__(obj)):  # 如果是值字典，则处理
@@ -99,7 +100,7 @@ class Encoder():
         2. 转换list型
         """
         if (type(obj) == type(dict())):
-            for (k, v) in obj.items():
+            for (k, v) in obj.copy().items():
                 if ((type(v) == type(list())) and self.__is_vars_list__(v)):  # 如果是参数列表，则处理
                     obj[k] = self.__dict_convert2__(v)
                 else:  # 否则向下递归
@@ -112,6 +113,7 @@ class Encoder():
         """
         判断是不是{值 -> 类型: 描述}格式的字典。称为“值字典”
         """
+        # print(_dict)
         for k in _dict:
             if (not ("->" in k)):
                 return False
@@ -125,7 +127,7 @@ class Encoder():
         """
         for i in _list:
             if (type(i) == type(dict())):
-                if (not ({"key", "values"}.issubset(set(i.keys())))):
+                if (not ({"key", "value"}.issubset(set(i.keys())))):
                     return False
             else:
                 return False
@@ -191,7 +193,11 @@ class Encoder():
                 self.__mergeEnemyDataFromJson_DFS__(obj_js[k], obj_ir[k])
         elif (type(obj_js) == type(list())):
             for i in obj_js:
-                obj_ir[i["key"]]["values_current"] = i["value"]
+                targetIRObj = obj_ir[i["key"]]
+                currentKey = self.__find_key_current__(targetIRObj)
+                if (currentKey):
+                    targetIRObj[currentKey] = i["value"]
+                # self.__mergeEnemyDataFromJson_DFS__(i, obj_ir[i["key"]])
         else:
             obj_ir["values_current"] = obj_js
 
@@ -205,6 +211,11 @@ class Encoder():
     #    elif (type(obj) == type(dict())):
     #        for (k, v) in obj.copy().items():
     #            pass
+
+    def __find_key_current__(self, _dict: dict) -> str:
+        for key in _dict:
+            if (key.endswith("_current")):
+                return key
 
     def __str2mathNum__(self, s: str):
         (i, f) = (int(s), float(s))
@@ -242,7 +253,6 @@ class JsonDictCompiler():
         n：用于处理重叠的单位，默认0则生成整数，否则取小数点后n位。如n=0时，enemy01>114>514；n=1时,enemy01>114>514.0
         因为是IR，是固定格式，所以敢写死。
         """
-        jsonObj = dict()
 
         if (n):
             keyNameFmt = "{0:s}>{1:.%uf}>{2:n}" % (n)
@@ -250,6 +260,58 @@ class JsonDictCompiler():
             keyNameFmt = "{0:s}>{1:n}>{2:n}"
         (x, y) = enemyIRObj["pos"]
         keyName = keyNameFmt.format(enemyIRObj["name"], x, y)
+
+        jsonObj = copy.deepcopy(enemyIRObj)
+        self.__buildEnemyDict4Json_DFS__(jsonObj)
+
+        return {keyName: jsonObj}
+
+    def __is_value_dict__(self, _dict: dict) -> int:
+        """
+        struct typeCode
+        {
+            unsigned int isValueDict: 1;
+            unsigned int isValueDictList: 1;
+        };
+        """
+        typeCode = 0
+        for k in _dict:
+            if (type(k) == type(str())):
+                if (k == "varNameList"):
+                    typeCode |= 0b01
+                elif (k.endswith("_current")):
+                    typeCode |= 0b10
+
+        return typeCode
+
+    def __buildEnemyDict4Json_DFS__(self, obj):
+        if (type(obj) == type(dict())):
+            for (k, v) in obj.items():
+                if (type(v) == type(dict())):
+                    # obj.setdefault(k,dict())
+                    typeCode_v = self.__is_value_dict__(v)
+                    if (typeCode_v & 0b10):
+                        valueKeyName = self.__find_key_current__(v)
+                        obj[k] = v[valueKeyName]
+                    elif (typeCode_v & 0b01):
+                        obj[k] = [v[varName] for varName in v["varNameList"]]
+                        self.__buildEnemyDict4Json_DFS__(obj[k])
+                    else:
+                        self.__buildEnemyDict4Json_DFS__(v)
+        elif (type(obj) == type(list())):
+            for i in obj:
+                self.__buildEnemyDict4Json_DFS__(i)
+
+    def __find_key_current__(self, _dict: dict) -> str:
+        for k in _dict:
+            if (k.endswith("_current")):
+                return k
+
+    def __dict_convert2__(self, varDict: dict):
+        """
+        1用于纯字典，2用于列表参数的。约定俗成吧。
+        """
+        return [varDict[varName] for varName in varDict["varNameList"]]
 
 
 if (__name__ == "__main__"):
@@ -261,6 +323,11 @@ if (__name__ == "__main__"):
     #    print("\n\n{0:s}对象的中间表示空模板为：\n{1}".format(
     #        enemy, i.buildEmptyEnemyIR(enemy)))
 
+    # print(i.buildEmptyEnemyIR("enemy12"), "\n\n")
     enemyData = ("enemy12>102>98", {"ammo": 1, "boss": 1, "vars": [{"key": "atks", "value": 1}, {
                  "key": "movNsta", "value": 0}], "xMax": {"value": 6}, "xMin": {"value": 1}, "xscale": 100})
-    print(i.mergeEnemyDataFromJson(enemyData))
+    ir = i.mergeEnemyDataFromJson(enemyData)
+    cc = JsonDictCompiler()
+    out = cc.buildEnemyDict4Json(ir)
+    print("源json格式数据：\n{0}\n\n转换为中间格式：\n{1}\n\n编译回游戏用json格式：\n{2}".format(
+        enemyData, ir, out))
