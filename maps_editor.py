@@ -4,7 +4,16 @@
 import copy
 import json
 import sys
-# import ast
+import ast
+import pprint
+
+
+def __template_read__():
+    with open("map_things.json", "rt", encoding="utf-8") as jsonfile:
+        return json.load(jsonfile)
+
+
+TEMPLATE_JSON = __template_read__()
 
 
 class Encoder():
@@ -15,14 +24,14 @@ class Encoder():
     def __init__(self):
         ##########################
         # 读入数据模板
-        self._templateJson = self.__template_read__()
+        self._templateJson = copy.deepcopy(
+            TEMPLATE_JSON)  # __template_read__()
         # 表示类型的特定字符串与对应转换函数或类之间的对应关系
         self.__typeDict__ = {"int": int, "bool": self.__str2bool__, "str": str}
         self.__enemyNameDict__ = self.__enemyNameDict_read__()
 
-    def __template_read__(self):
-        with open("map_things.json", "rt", encoding="utf-8") as jsonfile:
-            return json.load(jsonfile)
+        # 函数同名定义
+        self.mergeDataFromJson = self.mergeEnemyDataFromJson
 
     def __enemyNameDict_read__(self):
         jsonfile = open("enemies.json", "rt", encoding="utf-8")
@@ -31,10 +40,16 @@ class Encoder():
 
         return {item["name"]: item for item in data}
 
-    def buildEmptyEnemyIR(self, enemyName: str) -> dict:
-        obj = copy.deepcopy(self._templateJson["enemy_common"])
+    def buildEmptyEnemyIR(self, objArgs) -> dict:
+        # objName: str, objCommonName: str) -> dict:
+        """
+        构建空IR模板的函数。名字带“enemy”只是因为最早为敌人单位设计，现扩大可用范围，但是懒得改名了，由一个前端函数间接调用。
+        objArgs: 一个有顺序的可迭代对象，一般是(对象具体名, 通用模板名, 系列名)，例如：("enemy01", "enemy_common" ,"enemies")
+        """
+        (objName, objCommonName, objSeriesName) = objArgs
+        obj = copy.deepcopy(self._templateJson[objCommonName])
         # Warning: update方法也需要考虑是否使用深拷贝！若未拷贝，传的参仅为指针，修改一次即已变动。造成本函数“一次性”的BUG。
-        obj.update(copy.deepcopy(self._templateJson["enemies"][enemyName]))
+        obj.update(copy.deepcopy(self._templateJson[objSeriesName][objName]))
         # print(obj)
         # for (k_parent, v_parent) in obj:
         #    if (type(v_parent) == type(dict())):
@@ -59,12 +74,14 @@ class Encoder():
 
         #######################################################
         # 杂项处理
-        if (obj["dest"] == None):
-            enemy = self.__enemyNameDict__.get(enemyName, None)
-            if (enemy):
-                obj["dest"] = enemy["dest"]
+        if (objSeriesName == "enemies"):  # 只有敌人对象才可能需要从已有列表补充单位名
+            enemyName = objName
+            if (obj["dest"] == None):
+                enemy = self.__enemyNameDict__.get(enemyName, None)
+                if (enemy):
+                    obj["dest"] = enemy["dest"]
 
-        obj["name"] = enemyName  # 加上主键，怎么最容易被忘记呢？
+        obj["name"] = objName  # 加上主键，怎么最容易被忘记呢？
 
         return obj
 
@@ -180,7 +197,8 @@ class Encoder():
         x = self.__str2mathNum__(x)
         y = self.__str2mathNum__(y)
 
-        enemyIRObj = self.buildEmptyEnemyIR(enemyName=enemyName)
+        # enemyIRObj = self.buildEmptyEnemyIR(enemyName=enemyName)
+        enemyIRObj = self.buildEmptyIR(objName=enemyName)
         enemyIRObj["pos"] = [x, y]
 
         self.__mergeEnemyDataFromJson_DFS__(enemyObjV, enemyIRObj)
@@ -228,6 +246,19 @@ class Encoder():
         with open(filename, "rt", encoding="utf-8") as jsonfile:
             return json.load(jsonfile).get("LevelData")
 
+    def buildEmptyIR(self, objName: str) -> dict:
+        # for keyWord in ("enemy","object","other","lock"):
+        if (objName.startswith("enemy")):
+            return self.buildEmptyEnemyIR([objName, "enemy_common", "enemies"])
+        elif (objName.startswith("object")):
+            return self.buildEmptyEnemyIR([objName, "object_common", "objects"])
+        elif (objName.startswith("other")):
+            return self.buildEmptyEnemyIR([objName, "other_common", "others"])
+        elif (objName.startswith("lock")):
+            return self.buildEmptyEnemyIR([objName, "lock_common", "locks"])
+
+    # def mergeDataFromJson(self,objName:str):
+
 
 class IR():
     """
@@ -235,7 +266,97 @@ class IR():
     """
 
     def __init__(self):
-        self.dataBuffer = dict()
+        ###################################
+        # 几个变量
+        self.dataBuffer = self.__dataBuffer_init__()
+        self.ed = Encoder()
+        self.pp4IR = pprint.PrettyPrinter(sort_dicts=False)
+
+    def __dataBuffer_init__(self):
+        """
+        IR数据结构：
+        {
+            Level号: {
+                "场景1": {
+                    "objects": [
+                        {"name": "enemy01", ...},
+                        {"name": "object01", ...},
+                        ...
+                    ],
+                    "locks": [
+                        {"name": "lock", ...},
+                        {"name": "lock", ...},
+                    ]
+                },
+                "场景2": {...},
+                ...
+            }
+        }
+        """
+        emptyLevel = dict()
+        levels_template = TEMPLATE_JSON["levels"]
+
+        ############################################
+        # level-mission 对应关系
+        diff_mission = dict()
+        level_nums = []
+        for (mission, levels2) in levels_template["mission-diff"].items():
+            level_nums += levels2
+            for level in levels2:
+                diff_mission[level] = mission
+
+        level_nums.sort()
+        for level in level_nums:
+            emptyLevel[str(level)] = dict()
+            levelDict = emptyLevel[str(level)]
+            for s in levels_template["topographies"][diff_mission[level]]:
+                levelDict[s] = {"objects": [], "locks": []}
+
+        return emptyLevel
+
+    def load_from_jsonDict(self, dict_js: dict):
+        """
+        从mod的json文件转换所得dict中读取关卡数据
+        即_dict["LevelData"]
+        """
+        for (stageName, stage) in dict_js.items():
+            (level, stageNum) = self.__key_split__(stageName)
+            for kv in stage.items():
+                obj_ir = self.ed.mergeDataFromJson(kv)
+                if (obj_ir["name"] == "lock"):
+                    self.dataBuffer[level][stageNum]["locks"].append(obj_ir)
+                else:
+                    self.dataBuffer[level][stageNum]["objects"].append(obj_ir)
+
+        print("已成功读入\n{0}".format(self.dataBuffer))
+
+    def __key_split__(self, key: str):
+        """
+        处理类似"sx_y"的键名，读取为[x: str, y: str]
+        """
+        key = key.lstrip('s')
+        # key = tuple(int(i) for i in key.split('_'))
+        key = key.split('_')
+
+        return key
+
+    def get_IR_str(self) -> str:
+        """
+        获取IR表示，利用pprint美化，便于查看
+        IR表示的备份与还原仅仅是附带功能。
+        """
+        return self.pp4IR.pformat(self.dataBuffer)
+
+    def load_from_IR_str(self, str_ir: str):
+        """
+        读取IR表示的字符串，转化为IR数据
+        """
+        if (self.pp4IR.isreadable(str_ir)):
+            self.dataBuffer = ast.literal_eval(str_ir)
+            print("已成功读入\n{0}".format(self.dataBuffer))
+        else:
+            print("此字符串无法被解析为可读取的数据")
+            sys.exit(1)
 
 
 class JsonDictCompiler():
@@ -322,12 +443,35 @@ if (__name__ == "__main__"):
     # for enemy in enemies:
     #    print("\n\n{0:s}对象的中间表示空模板为：\n{1}".format(
     #        enemy, i.buildEmptyEnemyIR(enemy)))
+    print(i.buildEmptyIR("enemy01"), "\n\n")
+    print(i.buildEmptyIR("object01"), "\n\n")
+    print(i.buildEmptyIR("other01"), "\n\n")
+    print(i.buildEmptyIR("lock"), "\n\n")
 
     # print(i.buildEmptyEnemyIR("enemy12"), "\n\n")
     enemyData = ("enemy12>102>98", {"ammo": 1, "boss": 1, "vars": [{"key": "atks", "value": 1}, {
-                 "key": "movNsta", "value": 0}], "xMax": {"value": 6}, "xMin": {"value": 1}, "xscale": 100})
-    ir = i.mergeEnemyDataFromJson(enemyData)
-    cc = JsonDictCompiler()
-    out = cc.buildEnemyDict4Json(ir)
-    print("源json格式数据：\n{0}\n\n转换为中间格式：\n{1}\n\n编译回游戏用json格式：\n{2}".format(
-        enemyData, ir, out))
+        "key": "movNsta", "value": 0}], "xMax": {"value": 6}, "xMin": {"value": 1}, "xscale": 100})
+    lockData = ("lock>124>43", {"wave": 3, "xscale": 100})
+    objectData = ("object04>504>76", {"ammo": 1, "xscale": 100})
+    otherData = ("other01>288>295", {"xscale": -100})
+
+    # ir = i.mergeEnemyDataFromJson(enemyData)
+    # cc = JsonDictCompiler()
+    # out = cc.buildEnemyDict4Json(ir)
+    # print("源json格式数据：\n{0}\n\n转换为中间格式：\n{1}\n\n编译回游戏用json格式：\n{2}".format(
+    #    enemyData, ir, out))
+
+    ir = IR()
+    # pp=pprint.PrettyPrinter(sort_dicts=False)
+    # pp.pprint(ir.dataBuffer)
+
+    map_test3_file = open("scw.json", "rt")
+    map_test3_data = json.load(map_test3_file)
+    map_test3_file.close()
+
+    ir.load_from_jsonDict(map_test3_data["LevelData"])
+    map_test3_data_IR = ir.get_IR_str()
+    ir.load_from_IR_str(map_test3_data_IR)
+
+    with open("/tmp/scw.mapIR.txt", "wt") as mapfile:
+        mapfile.write(map_test3_data_IR)
