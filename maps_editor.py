@@ -6,6 +6,9 @@ import json
 import sys
 import ast
 import pprint
+from collections import defaultdict
+import argparse
+import pathlib
 
 
 def __template_read__():
@@ -206,6 +209,7 @@ class Encoder():
         return enemyIRObj
 
     def __mergeEnemyDataFromJson_DFS__(self, obj_js, obj_ir):
+        # print("{0}\t====\t{1}".format(obj_js,obj_ir))
         if (type(obj_js) == type(dict())):
             for k in obj_js.copy():
                 self.__mergeEnemyDataFromJson_DFS__(obj_js[k], obj_ir[k])
@@ -270,6 +274,7 @@ class IR():
         # 几个变量
         self.dataBuffer = self.__dataBuffer_init__()
         self.ed = Encoder()
+        self.cc = JsonDictCompiler()
         self.pp4IR = pprint.PrettyPrinter(sort_dicts=False)
 
     def __dataBuffer_init__(self):
@@ -314,21 +319,26 @@ class IR():
 
         return emptyLevel
 
-    def load_from_jsonDict(self, dict_js: dict):
+    def load_from_json_dict(self, dict_js: dict):
         """
         从mod的json文件转换所得dict中读取关卡数据
         即_dict["LevelData"]
         """
+        # print(dict_js)
         for (stageName, stage) in dict_js.items():
             (level, stageNum) = self.__key_split__(stageName)
             for kv in stage.items():
-                obj_ir = self.ed.mergeDataFromJson(kv)
-                if (obj_ir["name"] == "lock"):
-                    self.dataBuffer[level][stageNum]["locks"].append(obj_ir)
-                else:
-                    self.dataBuffer[level][stageNum]["objects"].append(obj_ir)
+                if (kv[-1]):  # 有东西才能作转化
+                    # print(kv)
+                    obj_ir = self.ed.mergeDataFromJson(kv)
+                    if (obj_ir["name"] == "lock"):
+                        self.dataBuffer[level][stageNum]["locks"].append(
+                            obj_ir)
+                    else:
+                        self.dataBuffer[level][stageNum]["objects"].append(
+                            obj_ir)
 
-        print("已成功读入\n{0}".format(self.dataBuffer))
+        # print("已成功读入\n{0}".format(self.dataBuffer))
 
     def __key_split__(self, key: str):
         """
@@ -353,10 +363,25 @@ class IR():
         """
         if (self.pp4IR.isreadable(str_ir)):
             self.dataBuffer = ast.literal_eval(str_ir)
-            print("已成功读入\n{0}".format(self.dataBuffer))
+            #print("已成功读入\n{0}".format(self.dataBuffer))
         else:
             print("此字符串无法被解析为可读取的数据")
             sys.exit(1)
+
+    def write_IR_file(self, filepath):
+        with open(filepath, "wt", encoding="utf-8") as txtfile:
+            txtfile.write(self.get_IR_str())
+
+    def load_from_IR_file(self, filepath):
+        with open(filepath, "rt", encoding="utf-8") as txtfile:
+            self.load_from_IR_str(txtfile.read())
+
+    def cc_json_dict(self):
+        # LevelData=dict()
+        self.cc.buildJsonData(self.dataBuffer)
+
+    def get_json_dict(self):
+        return self.cc.get_built_level_data()
 
 
 class JsonDictCompiler():
@@ -365,7 +390,8 @@ class JsonDictCompiler():
     """
 
     def __init__(self):
-        pass
+        self.buildObjDict4Json = self.buildEnemyDict4Json  # 由于功能通用，直接取作函数别名
+        self.dataBuffer = None  # 防止反复编译，特设此变量作缓冲区，是一个数据暂存区
 
     def buildEnemyDict4Json(self, enemyIRObj: dict, n: int = 0) -> dict:
         """
@@ -434,26 +460,140 @@ class JsonDictCompiler():
         """
         return [varDict[varName] for varName in varDict["varNameList"]]
 
+    def buildStage(self, stageIRDict: dict) -> dict:
+        """
+        构建用于mod json的单独关卡数据
+        """
+        stage = dict()
+        objs = stageIRDict["objects"]+stageIRDict["locks"]
+        objs_ddt = defaultdict(list)
+        for obj_ir in objs:
+            k = (obj_ir["name"], tuple(obj_ir["pos"]))
+            # print(k)
+            objs_ddt[k].append(obj_ir)
+
+        # print(objs_ddt)
+        for (k, v) in objs_ddt.items():
+            for i in range(len(v)):
+                stage.update(self.buildObjDict4Json(v[i], i))
+
+        return stage
+
+    def buildJsonData(self, LevelDataIR):
+        """
+        构建整份关卡数据的json dict。
+        防反复编译起见，这个函数仅仅将编译结果写录到缓冲区中。
+        再之后的输出功能，由别的函数接力完成。
+        格式：{"s1_1": {...}, ...}
+        """
+        LevelData = dict()
+        for levelNum in LevelDataIR:
+            level = LevelDataIR[levelNum]
+            for stageNum in level:
+                key = "s{0:s}_{1:s}".format(levelNum, stageNum)
+                LevelData[key] = self.buildStage(
+                    LevelDataIR[levelNum][stageNum])
+
+        self.dataBuffer = LevelData
+
+    # 这里可不好写直接全局保存mod json数据的功能
+    # def get_json_str(self) -> str:
+    #    return json.dumps(self.dataBuffer, ensure_ascii=False, indent='\t', sort_keys=False)
+
+    # def write_json_file(self, filepath):
+    #    with open(filepath, "wt", encoding="utf-8") as jsonfile:
+    #        jsonfile.write(self.get_json_str())
+
+    def get_built_level_data(self):
+        return self.dataBuffer
+
+
+#########################################################
+
+def main():
+    """
+    隐藏功能：通过命令行可直接调用(反)编译功能
+    """
+    cmdParser = argparse.ArgumentParser(
+        description="隐藏功能：IR格式数据 与 mod json数据的双向编译工具命令行前端。“IR”指本程序使用的中间格式，并非严谨的概念。")
+    cmdParser.add_argument("mode", choices=(
+        "d", "c"), help="c：compile，将IR格式的数据编译为mod json格式数据；d：decompile，将mod json格式的数据编译为IR格式数据")
+    cmdParser.add_argument("input_path", help="传入文件的路径")
+    cmdParser.add_argument("-o", "--out_path", dest="outPath",
+                           help="输出文件的路径", required=False, default=None)
+    cmdParser.add_argument("-mi", "--merge_into", dest="mergeIntoPath",
+                           help="与何mod json的WeaponData等其他数据合并？(仅编译模式可用)", required=False, default=None)
+    args = cmdParser.parse_args()
+
+    ########################################
+    # 传参处理
+    (mode, inPath, outPath, mergeIntoPath) = (
+        args.mode, args.input_path, args.outPath, args.mergeIntoPath)
+
+    inFile = pathlib.Path(inPath).absolute()
+    (inFilePath, inFileName) = (inFile.parent, inFile.stem)
+
+    outFile = None
+    if (outPath):
+        outFile = pathlib.Path(outPath).absolute()
+    else:
+        match mode:
+            case 'd':
+                outFile = inFilePath / "{0:s}_map_IR.txt".format(inFileName)
+            case 'c':
+                outFile = inFilePath / "{0:s}_build.json".format(inFileName)
+
+    ###########################################
+    # 执行功能
+    ir = IR()
+    match mode:
+        case 'd':
+            with open(inFile, "rt", encoding="utf-8") as jsonfile:
+                ir.load_from_json_dict(json.load(jsonfile)["LevelData"])
+
+            ir.write_IR_file(outFile)
+
+        case 'c':
+            if (mergeIntoPath):
+                mergeIntoFile = pathlib.Path(mergeIntoPath).absolute()
+            else:
+                print("错误：未指定与何json的其他数据合并到")
+                sys.exit(1)
+
+            ir.load_from_IR_file(inFile)
+            mergeIntoData = None
+            with open(mergeIntoFile, "rt", encoding="utf-8") as jsonfile:
+                mergeIntoData = json.load(jsonfile)
+
+            jsonData = copy.deepcopy(mergeIntoData)
+            ir.cc_json_dict()
+            jsonData["LevelData"] = ir.get_json_dict()
+
+            with open(outFile, "wt", encoding="utf-8") as jsonfile:
+                json.dump(jsonData, jsonfile, ensure_ascii=False,
+                          indent='\t', sort_keys=False)
+
 
 if (__name__ == "__main__"):
-    i = Encoder()
+    sys.exit(main())
+    # i = Encoder()
     # enemy = "enemy01_2"
     # enemies = ["enemy%02d" % (i) for i in range(1, 43+1)]
     # enemies.remove("enemy24")
     # for enemy in enemies:
     #    print("\n\n{0:s}对象的中间表示空模板为：\n{1}".format(
     #        enemy, i.buildEmptyEnemyIR(enemy)))
-    print(i.buildEmptyIR("enemy01"), "\n\n")
-    print(i.buildEmptyIR("object01"), "\n\n")
-    print(i.buildEmptyIR("other01"), "\n\n")
-    print(i.buildEmptyIR("lock"), "\n\n")
+    # print(i.buildEmptyIR("enemy01"), "\n\n")
+    # print(i.buildEmptyIR("object01"), "\n\n")
+    # print(i.buildEmptyIR("other01"), "\n\n")
+    # print(i.buildEmptyIR("lock"), "\n\n")
 
     # print(i.buildEmptyEnemyIR("enemy12"), "\n\n")
-    enemyData = ("enemy12>102>98", {"ammo": 1, "boss": 1, "vars": [{"key": "atks", "value": 1}, {
-        "key": "movNsta", "value": 0}], "xMax": {"value": 6}, "xMin": {"value": 1}, "xscale": 100})
-    lockData = ("lock>124>43", {"wave": 3, "xscale": 100})
-    objectData = ("object04>504>76", {"ammo": 1, "xscale": 100})
-    otherData = ("other01>288>295", {"xscale": -100})
+    # enemyData = ("enemy12>102>98", {"ammo": 1, "boss": 1, "vars": [{"key": "atks", "value": 1}, {
+    #    "key": "movNsta", "value": 0}], "xMax": {"value": 6}, "xMin": {"value": 1}, "xscale": 100})
+    # lockData = ("lock>124>43", {"wave": 3, "xscale": 100})
+    # objectData = ("object04>504>76", {"ammo": 1, "xscale": 100})
+    # otherData = ("other01>288>295", {"xscale": -100})
 
     # ir = i.mergeEnemyDataFromJson(enemyData)
     # cc = JsonDictCompiler()
@@ -461,17 +601,25 @@ if (__name__ == "__main__"):
     # print("源json格式数据：\n{0}\n\n转换为中间格式：\n{1}\n\n编译回游戏用json格式：\n{2}".format(
     #    enemyData, ir, out))
 
-    ir = IR()
+    # ir = IR()
     # pp=pprint.PrettyPrinter(sort_dicts=False)
     # pp.pprint(ir.dataBuffer)
 
-    map_test3_file = open("scw.json", "rt")
-    map_test3_data = json.load(map_test3_file)
-    map_test3_file.close()
+    # map_test3_file = open("scw.json", "rt")
+    # map_test3_data = json.load(map_test3_file)
+    # map_test3_file.close()
 
-    ir.load_from_jsonDict(map_test3_data["LevelData"])
-    map_test3_data_IR = ir.get_IR_str()
-    ir.load_from_IR_str(map_test3_data_IR)
+    # ir.loadFromJsonDict(map_test3_data["LevelData"])
+    # map_test3_data_IR = ir.get_IR_str()
+    # map_test3_data_IR2 = ast.literal_eval(map_test3_data_IR)
+    # ir.load_from_IR_str(map_test3_data_IR)
 
-    with open("/tmp/scw.mapIR.txt", "wt") as mapfile:
-        mapfile.write(map_test3_data_IR)
+    # with open("/tmp/scw.mapIR.txt", "wt") as mapfile:
+    #    mapfile.write(map_test3_data_IR)
+
+    # cc = JsonDictCompiler()
+    # print(map_test3_data_IR2["1"]["1"])
+    # s1_1_IR = map_test3_data_IR2["1"]["1"]
+    # s1_1_IR["objects"].append(s1_1_IR["objects"][0])
+    # s1_1 = cc.buildStage(map_test3_data_IR2["1"]["1"])
+    # print(s1_1)

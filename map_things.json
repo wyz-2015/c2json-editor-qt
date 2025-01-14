@@ -108,30 +108,117 @@
 				}
 			]
 		},
-		"enemy02": {},
+		"enemy02": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "行为",
+					"value": {
+						"values": {"0 -> int": "悬停", "1 -> int": "投放日军", "2 -> int": "投放德军"}
+					}
+				},
+				{
+					"key": "enemyWave",
+					"dest": "投放敌人波数",
+					"value": {
+						"values": {"0 -> int": "3", "1 -> int": "6", "0 -> int": "9"}
+					}
+				}
+			]			
+		},
 		"enemy03": {
 			"child": {
-				"dest": "是否有援兵(本项为猜测)",
+				"dest": "是否有援兵(本项为猜测)(deleted)",
 				"values": {"0 -> int": "False", "1 -> int": "True"}
-			}
+			},
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "出场方式",
+					"value": {
+						"values": {"0 -> int": "移动(Moving)", "1 -> int": "停车(Parked)", "2 -> int": "降落(Landing)"}
+					}
+				},
+				{
+					"key": "child",
+					"dest": "计划生育政策(Summon Enemy)",
+					"value": {
+						"values": {"0 -> int": "任意生小兵", "1 -> int": "不生"}
+					}
+				}
+			]
 		},
 		"enemy03_2": {
 			"child": {
-				"dest": "是否有援兵(本项为猜测)",
+				"dest": "是否有援兵(本项为猜测)(deleted)",
 				"values": {"0 -> int": "False", "1 -> int": "True"}
-			}
+			},
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "出场方式",
+					"value": {
+						"values": {"0 -> int": "移动(Moving)", "1 -> int": "停车(Parked)", "2 -> int": "降落(Landing)"}
+					}
+				},
+				{
+					"key": "child",
+					"dest": "计划生育政策(Summon Enemy)",
+					"value": {
+						"values": {"0 -> int": "任意生小兵", "1 -> int": "不生"}
+					}
+				}
+
+			]
+
 		},
 		"enemy03_3": {
 			"child": {
-				"dest": "是否有援兵(本项为猜测)",
+				"dest": "是否有援兵(本项为猜测)(deleted)",
 				"values": {"0 -> int": "False", "1 -> int": "True"}
-			}
+			},
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "出场方式",
+					"value": {
+						"values": {"0 -> int": "移动(Moving)", "1 -> int": "停车(Parked)", "2 -> int": "降落(Landing)"}
+					}
+				},
+				{
+					"key": "child",
+					"dest": "计划生育政策(Summon Enemy)",
+					"value": {
+						"values": {"0 -> int": "任意生小兵", "1 -> int": "不生"}
+					}
+				}
+
+			]
+
 		},
 		"enemy03_4": {
 			"child": {
-				"dest": "是否有援兵(本项为猜测)",
+				"dest": "是否有援兵(本项为猜测)(deleted)",
 				"values": {"0 -> int": "False", "1 -> int": "True"}
-			}
+			},
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "出场方式",
+					"value": {
+						"values": {"0 -> int": "移动(Moving)", "1 -> int": "停车(Parked)", "2 -> int": "降落(Landing)"}
+					}
+				},
+				{
+					"key": "child",
+					"dest": "计划生育政策(Summon Enemy)",
+					"value": {
+						"values": {"0 -> int": "任意生小兵", "1 -> int": "不生"}
+					}
+				}
+
+			]
+
 		},
 		"enemy04": {},
 		"enemy05": {
@@ -270,7 +357,7 @@
 			"dest": "竹林伏兵"
 		},
 		"enemy20": {},
-		"enemy21": {
+		"enemy21_2": {
 			"dest": "上海滩轿车(红)",
 			"state": {
 				"dest": "意义不明(deleted)",
@@ -286,7 +373,7 @@
 				}
 			]
 		},
-		"enemy21_2": {
+		"enemy21": {
 			"dest": "上海滩轿车(灰)",
 			"vars": [
 				{
@@ -298,7 +385,7 @@
 				}
 			]
 		},
-		"enemy22": {
+		"enemy22_1": {
 			"dest": "红木大桌"
 		},
 		"enemy22_2": {
@@ -436,7 +523,17 @@
 		"enemy41_2": {
 			"dest": "树上的香蕉"
 		},
-		"enemy42": {},
+		"enemy42": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "接敌前状态",
+					"value": {
+						"values": {"0 -> int": "快步(Walk Fast)", "1 -> int": "站立(Stang Still)"}
+					}
+				}
+			]
+		},
 		"enemy43": {
 			"vars": [
 				{
@@ -529,7 +626,7 @@
 		"object07": {
 			"dest": "铁箱"
 		},
-		"object08": {
+		"object08_1": {
 			"dest": "花盆(红)"
 		},
 		"object08_2": {
@@ -541,7 +638,7 @@
 		"object09": {
 			"dest": "水下拦截网"
 		},
-		"object10": {
+		"object10_1": {
 			"dest": "ππ"
 		},
 		"object10_2": {
@@ -556,7 +653,7 @@
 		"object10_5": {
 			"dest": "Π"
 		},
-		"object11": {
+		"object11_1": {
 			"dest": "细木跳台(14节)"
 		},
 		"object11_2": {
@@ -583,7 +680,7 @@
 		"object12": {
 			"dest": "大锅"
 		},
-		"object13": {
+		"object13_1": {
 			"dest": "日军吊人"
 		},
 		"object13_2": {
@@ -592,7 +689,7 @@
 		"object14": {
 			"dest": "导弹运载车"
 		},
-		"object15": {
+		"object15_1": {
 			"dest": "毒雾(>)"
 		},
 		"object15_2": {
@@ -610,7 +707,7 @@
 		"object19": {
 			"dest": "Hi-Do直升机"
 		},
-		"object20": {
+		"object20_1": {
 			"dest": "火车头"
 		},
 		"object20_2": {
