@@ -478,7 +478,17 @@
 				}
 			]
 		},
-		"enemy32": {},
+		"enemy32": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "接敌前的状态",
+					"value": {
+						"values": {"0 -> int": "待机(Relax)", "1 -> int": "直出(Rush Out)"}
+					}
+				}
+			]
+		},
 		"enemy33": {},
 		"enemy34": {},
 		"enemy35": {
@@ -596,7 +606,16 @@
 
 	"objects": {
 		"object01": {
-			"dest": "沙袋"
+			"dest": "沙袋",
+			"vars": [
+				{
+					"key": "inAir",
+					"dest": "悬空？",
+					"value": {
+						"values": {"0 -> int": "False(Gravity)", "1 -> int": "True(Hovering)"}
+					}
+				}
+			]
 		},
 		"object02": {
 			"dest": "小船"
@@ -615,25 +634,79 @@
 			]
 		},
 		"object04": {
-			"dest": "木箱"
+			"dest": "木箱",
+			"vars": [
+				{
+					"key": "inAir",
+					"dest": "悬空？",
+					"value": {
+						"values": {"0 -> int": "False(Gravity)", "1 -> int": "True(Hovering)"}
+					}
+				}
+			]
 		},
 		"object05": {
-			"dest": "静止铁桶"
+			"dest": "静止铁桶",
+			"vars": [
+				{
+					"key": "inAir",
+					"dest": "悬空？",
+					"value": {
+						"values": {"0 -> int": "False(Gravity)", "1 -> int": "True(Hovering)"}
+					}
+				}
+			]
 		},
 		"object06": {
 			"dest": "屏风"
 		},
 		"object07": {
-			"dest": "铁箱"
+			"dest": "铁箱",
+			"vars": [
+				{
+					"key": "inAir",
+					"dest": "悬空？",
+					"value": {
+						"values": {"0 -> int": "False(Gravity)", "1 -> int": "True(Hovering)"}
+					}
+				}
+			]
 		},
 		"object08_1": {
-			"dest": "花盆(红)"
+			"dest": "花盆(红)",
+			"vars": [
+				{
+					"key": "inAir",
+					"dest": "悬空？",
+					"value": {
+						"values": {"0 -> int": "False(Gravity)", "1 -> int": "True(Hovering)"}
+					}
+				}
+			]
 		},
 		"object08_2": {
-			"dest": "花盆(黄)"
+			"dest": "花盆(黄)",
+			"vars": [
+				{
+					"key": "inAir",
+					"dest": "悬空？",
+					"value": {
+						"values": {"0 -> int": "False(Gravity)", "1 -> int": "True(Hovering)"}
+					}
+				}
+			]
 		},
 		"object08_3": {
-			"dest": "花盆(蓝)"
+			"dest": "花盆(蓝)",
+			"vars": [
+				{
+					"key": "inAir",
+					"dest": "悬空？",
+					"value": {
+						"values": {"0 -> int": "False(Gravity)", "1 -> int": "True(Hovering)"}
+					}
+				}
+			]
 		},
 		"object09": {
 			"dest": "水下拦截网"
@@ -800,7 +873,15 @@
 			"dest": "蛇"
 		},
 		"other100": {
-			"dest": "隐藏点"
+			"dest": "隐藏点",
+			"ammo": {
+				"dest": "掉落子弹包？",
+				"values": {"0 -> int": "False", "1 -> int": "True"}
+			},
+			"food": {
+				"dest": "掉落食物？",
+				"values": {"0 -> int": "false", "1 -> int": "true"}
+			}
 		}
 	},
 
