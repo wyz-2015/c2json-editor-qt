@@ -119,7 +119,7 @@ class MainWindow(QMainWindow):
             print(self.dataBuffer)
             with open(savePath, "wt", encoding="utf-8") as jsonfile:
                 json.dump(self.dataBuffer, jsonfile,
-                          ensure_ascii=False, indent="\t")
+                          ensure_ascii=False, indent="\t", sort_keys=True)
 
             self.change_current_file(savePath)
             self.set_data_saved(True)
@@ -133,7 +133,7 @@ class MainWindow(QMainWindow):
             print(self.dataBuffer)
             with open(str(self.currentFile), "wt", encoding="utf-8") as jsonfile:
                 json.dump(self.dataBuffer, jsonfile,
-                          ensure_ascii=False, indent="\t")
+                          ensure_ascii=False, indent="\t", sort_keys=True)
 
             self.set_data_saved(True)
 
@@ -208,7 +208,8 @@ class MainWindow(QMainWindow):
         if (q):
             # q_message = "\n如果您选择“继续”，则意味着您采用了本程序帮您自动补上的数据，随之，整份数据也确实“正确”了。\n是否继续？"
             q_message = "是否继续？"
-            q_choice = (QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            q_choice = (QMessageBox.StandardButton.Yes |
+                        QMessageBox.StandardButton.No)
         else:
             q_message = ""
             q_choice = QMessageBox.StandardButton.Yes
