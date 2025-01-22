@@ -872,6 +872,9 @@
 		"other17": {
 			"dest": "蛇"
 		},
+		"other18": {
+			"dest": "地雷警告"
+		},
 		"other100": {
 			"dest": "隐藏点",
 			"ammo": {
