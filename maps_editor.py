@@ -54,12 +54,13 @@ class WaveManager_ToolBar(QToolBar):
         super(WaveManager_ToolBar, self).__init__()
 
         self.btn_setCurrentWave = QPushButton("设定关注波次")
-        self.btn_ignoreWaves = QPushButton("显示所有对象")
-        self.btn_setWaveRange = QPushButton("设定波次上限(无下限)")
+        self.btn_ignoreWaves = QPushButton("[*_*] 显示所有对象")
+        self.btn_viewWave=QPushButton("[*_-] 只显示关注波次的单位")
+        self.btn_setWaveRange = QPushButton("设定波次上限(无下限)")#deleted
         self.btn_insertWave = QPushButton("[^] 插入波")
         self.btn_deleteWave = QPushButton("[-] 删除波")
 
-        self.btns = (self.btn_setCurrentWave, self.btn_setWaveRange, self.btn_ignoreWaves,
+        self.btns = (self.btn_setCurrentWave,  self.btn_viewWave, self.btn_ignoreWaves,
                      self.btn_insertWave, self.btn_deleteWave)
 
         for widget in self.btns:
@@ -74,7 +75,7 @@ class Obj_Explorer(QTreeWidget):
     def __init__(self, mapIR: dict = None):
         super(Obj_Explorer, self).__init__()
         self.mapIR = mapIR
-        self.setHeaderLabels(("Level", "Stage", "对象"))
+        self.setHeaderLabels(("Level-Stage", "对象ID","对象描述"))
         self.setColumnCount(3)
 
         self.setColumnWidth(0, 80)
@@ -94,7 +95,7 @@ class Obj_Explorer(QTreeWidget):
             self.root.addChild(child1)
             for stage in self.mapIR[level]:
                 child2 = QTreeWidgetItem()
-                child2.setText(1, stage)
+                child2.setText(0, stage)
                 child1.addChild(child2)
         # TODO
 

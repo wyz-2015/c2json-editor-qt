@@ -277,6 +277,9 @@ class IR():
         self.cc = JsonDictCompiler()
         self.pp4IR = pprint.PrettyPrinter(sort_dicts=False)
 
+        self.objList = []  # 对象列表，索引用。其在列表中的编号即为id
+        self.objList_index_max = 0  # 对象列表长度，避免反复使用len()求值
+
     def __dataBuffer_init__(self):
         """
         IR数据结构：
@@ -363,7 +366,7 @@ class IR():
         """
         if (self.pp4IR.isreadable(str_ir)):
             self.dataBuffer = ast.literal_eval(str_ir)
-            #print("已成功读入\n{0}".format(self.dataBuffer))
+            # print("已成功读入\n{0}".format(self.dataBuffer))
         else:
             print("此字符串无法被解析为可读取的数据")
             sys.exit(1)
@@ -377,11 +380,31 @@ class IR():
             self.load_from_IR_str(txtfile.read())
 
     def cc_json_dict(self):
+        """
+        将IR编译为json dict，但不返回
+        """
         # LevelData=dict()
         self.cc.buildJsonData(self.dataBuffer)
 
     def get_json_dict(self):
         return self.cc.get_built_level_data()
+
+    #####################################################
+    # 数据操作函数
+    def get_IR_data(self):
+        return self.dataBuffer
+
+    def index_init(self):
+        """
+        索引的初始化
+        """
+        self.objList.clear()
+        for level in self.dataBuffer:
+            for stage in self.dataBuffer[level]:
+                self.objList += (self.dataBuffer[level][stage]
+                                 ["objects"]+self.dataBuffer[level][stage]["locks"])
+
+        self.objList_index_max = len(self.objList)
 
 
 class JsonDictCompiler():
