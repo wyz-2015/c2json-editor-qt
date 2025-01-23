@@ -3,6 +3,7 @@ from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
 from c2ir import IR
+import pathlib
 
 
 class FileIO_ToolBar(QToolBar):
@@ -55,8 +56,8 @@ class WaveManager_ToolBar(QToolBar):
 
         self.btn_setCurrentWave = QPushButton("设定关注波次")
         self.btn_ignoreWaves = QPushButton("[*_*] 显示所有对象")
-        self.btn_viewWave=QPushButton("[*_-] 只显示关注波次的单位")
-        self.btn_setWaveRange = QPushButton("设定波次上限(无下限)")#deleted
+        self.btn_viewWave = QPushButton("[*_-] 只显示关注波次的单位")
+        self.btn_setWaveRange = QPushButton("设定波次上限(无下限)")  # deleted
         self.btn_insertWave = QPushButton("[^] 插入波")
         self.btn_deleteWave = QPushButton("[-] 删除波")
 
@@ -75,7 +76,7 @@ class Obj_Explorer(QTreeWidget):
     def __init__(self, mapIR: dict = None):
         super(Obj_Explorer, self).__init__()
         self.mapIR = mapIR
-        self.setHeaderLabels(("Level-Stage", "对象ID","对象描述"))
+        self.setHeaderLabels(("Level-Stage", "对象ID", "对象描述"))
         self.setColumnCount(3)
 
         self.setColumnWidth(0, 80)
@@ -86,6 +87,9 @@ class Obj_Explorer(QTreeWidget):
         self.mapIR = mapIR
 
     def tree_init(self):
+        """
+        初始化树视图
+        """
         self.root = QTreeWidgetItem()
         self.root.setBackground(0, QBrush(Qt.GlobalColor.yellow))
         self.root.setBackground(1, QBrush(Qt.GlobalColor.green))
@@ -96,11 +100,20 @@ class Obj_Explorer(QTreeWidget):
             for stage in self.mapIR[level]:
                 child2 = QTreeWidgetItem()
                 child2.setText(0, stage)
+
+                for obj in (self.mapIR[level][stage]["objects"]+self.mapIR[level][stage]["locks"]):
+                    child3 = QTreeWidgetItem()
+                    child3.setText(1, str(obj["id"]))
+                    child3.setText(2, obj["dest"])
+
+                    child2.addChild(child3)
+
                 child1.addChild(child2)
-        # TODO
 
         self.addTopLevelItem(self.root)
         # self.expandAll()
+
+        # TODO:能加入对树上事物的增减移动操作吗？
 
 
 class Maps_Editor_Main_Widget(QMainWindow):
@@ -116,6 +129,10 @@ class Maps_Editor_Main_Widget(QMainWindow):
         self.currentStage = ['1', '1']  # 当前正在操作的区段
         self.currentObj = None  # 当前正在操作的对象
 
+        self.currentDir = pathlib.Path().home()  # TODO:要有跟main.py里一样的记忆功能
+        self.IRFileDialog = QFileDialog(
+            self, "打开专门记录地图的IR信息文件", str(self.currentDir), "*")
+
         ####################################
         # 工具栏
         self.fileIO_ToolBar = FileIO_ToolBar()
@@ -128,7 +145,7 @@ class Maps_Editor_Main_Widget(QMainWindow):
         # 中央控件
         # TODO
         self.objExplorer = Obj_Explorer(
-            self.dataIR.dataBuffer)  # TODO：需要修改，用函数修改数据，避免直接操作
+            self.dataIR.get_IR_data())
         # print(self.dataIR.dataBuffer)
         self.obj2DViewer = QWidget()
         self.objParamsEditor = QWidget()
@@ -145,6 +162,8 @@ class Maps_Editor_Main_Widget(QMainWindow):
         ###################################
         # 按钮信号与功能函数连接
         # TODO
+        self.fileIO_ToolBar.btn_loadFullIR.clicked.connect(
+            self.func_loadFullIR)
 
     #################################
     # 东周天子函数
@@ -158,6 +177,13 @@ class Maps_Editor_Main_Widget(QMainWindow):
     ###########################################
     # 按钮功能函数
     # TODO
+    def func_loadFullIR(self):
+        if (self.IRFileDialog.exec()):
+            filePath = (self.IRFileDialog.selectedFiles())[0]  # 肯定只选择了1个文件
+            self.dataIR.load_from_IR_file(filePath)
+            self.dataIR.index_init()
+            self.objExplorer.set_mapIR(self.dataIR.get_IR_data())
+            self.objExplorer.tree_init()
 
 
 if (__name__ == "__main__"):

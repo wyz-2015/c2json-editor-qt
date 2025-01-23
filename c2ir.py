@@ -278,7 +278,9 @@ class IR():
         self.pp4IR = pprint.PrettyPrinter(sort_dicts=False)
 
         self.objList = []  # 对象列表，索引用。其在列表中的编号即为id
-        self.objList_index_max = 0  # 对象列表长度，避免反复使用len()求值
+        self.objList_len = 0  # 对象列表长度，避免反复使用len()求值
+        # self.recycleBin = self.__dataBuffer_init__() # 回收站设计
+        self.recycleBin = []
 
     def __dataBuffer_init__(self):
         """
@@ -358,7 +360,7 @@ class IR():
         获取IR表示，利用pprint美化，便于查看
         IR表示的备份与还原仅仅是附带功能。
         """
-        return self.pp4IR.pformat(self.dataBuffer)
+        return self.pp4IR.pformat(self.get_IR_copy_without_id())
 
     def load_from_IR_str(self, str_ir: str):
         """
@@ -383,11 +385,25 @@ class IR():
         """
         将IR编译为json dict，但不返回
         """
-        # LevelData=dict()
-        self.cc.buildJsonData(self.dataBuffer)
+        self.cc.buildJsonData(self.get_IR_copy_without_id())
 
     def get_json_dict(self):
         return self.cc.get_built_level_data()
+
+    def get_IR_copy_without_id(self):
+        """
+        得到一份没有“id”的数据副本
+        """
+        LevelData = copy.deepcopy(self.dataBuffer)
+        for level in LevelData:
+            for stage in LevelData[level]:
+                for obj_set_name in ("objects", "locks"):
+                    for obj in LevelData[level][stage][obj_set_name]:
+                        obj.pop("id", None)
+
+        return LevelData
+
+    # TODO:部分导入和部分导出的功能
 
     #####################################################
     # 数据操作函数
@@ -404,7 +420,56 @@ class IR():
                 self.objList += (self.dataBuffer[level][stage]
                                  ["objects"]+self.dataBuffer[level][stage]["locks"])
 
-        self.objList_index_max = len(self.objList)
+        self.objList_len = len(self.objList)
+
+        ##########################
+        # id编号
+        for i in range(len(self.objList)):
+            self.objList[i]["id"] = i
+
+    def obj_add(self, objName: str, level_stage):
+        """
+        增加对象：将新对象插入dataBuffer，且同时加入索引列表
+        level_stage: [level: str, stage: str]
+        """
+        obj = self.ed.buildEmptyIR(objName)
+        self.objList_add(obj)
+
+        (level, stage) = level_stage
+        if (obj["name"] == "lock"):
+            self.dataBuffer[level][stage]["locks"].append(obj)
+        else:
+            self.dataBuffer[level][stage]["objects"].append(obj)
+
+    def objList_add(self, obj):
+        """
+        在添加新对象时，刷新索引列表。
+        """
+        self.objList.append(obj)
+        self.objList_len += 1
+        obj["id"] = self.objList_len-1
+
+    def obj_del(self, obj_id: int, level_stage):
+        """
+        删除对象：将待删除对象从dataBuffer中移出，但是加入recycleBin，不移除出索引列表，保留索引。
+        level_stage: [level: str, stage: str]
+        """
+        obj_wannaDel = self.objList[obj_id]
+        obj_wannaDel["del"] = True
+
+        (level, stage) = level_stage
+        stage_IR = self.dataBuffer[level][stage]
+        stage_IR_sub = (stage_IR["locks"] if (
+            obj_wannaDel["name"] == "lock") else stage_IR["objects"])
+
+        for i in range(len(stage_IR_sub)):
+            if (stage_IR_sub[i].get("del")):
+                stage_IR_sub.pop(i)
+                break
+
+        self.obj_wannaDel.pop("del", True)
+
+        self.recycleBin.append(obj_wannaDel)
 
 
 class JsonDictCompiler():
