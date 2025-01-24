@@ -345,6 +345,8 @@ class IR():
 
         # print("已成功读入\n{0}".format(self.dataBuffer))
 
+        self.index_init()
+
     def __key_split__(self, key: str):
         """
         处理类似"sx_y"的键名，读取为[x: str, y: str]
@@ -369,9 +371,10 @@ class IR():
         if (self.pp4IR.isreadable(str_ir)):
             self.dataBuffer = ast.literal_eval(str_ir)
             # print("已成功读入\n{0}".format(self.dataBuffer))
+            self.index_init()
         else:
             print("此字符串无法被解析为可读取的数据")
-            sys.exit(1)
+            # sys.exit(1)
 
     def write_IR_file(self, filepath):
         with open(filepath, "wt", encoding="utf-8") as txtfile:
@@ -409,6 +412,9 @@ class IR():
     # 数据操作函数
     def get_IR_data(self):
         return self.dataBuffer
+
+    def get_IR_data_recycleBin(self):
+        return self.recycleBin
 
     def index_init(self):
         """

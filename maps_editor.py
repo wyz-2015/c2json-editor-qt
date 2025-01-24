@@ -72,39 +72,54 @@ class Obj_Explorer(QTreeWidget):
     """
     关卡对象资源管理器
     """
+    objWasSelected = pyqtSignal(int)
 
-    def __init__(self, mapIR: dict = None):
+    def __init__(self):  # , mapIR_main: dict = None):
         super(Obj_Explorer, self).__init__()
-        self.mapIR = mapIR
-        self.setHeaderLabels(("Level-Stage", "对象ID", "对象描述"))
-        self.setColumnCount(3)
+        self.mapIR_main = None
+        self.mapIR_bin = None
+        self.setHeaderLabels(("Level-Stage", "对象数", "对象ID", "对象描述"))
+        self.setColumnCount(4)
 
-        self.setColumnWidth(0, 80)
+        self.setColumnWidth(0, 100)
         self.setColumnWidth(1, 40)
-        self.setColumnWidth(2, 50)
+        self.setColumnWidth(2, 40)
+        self.setColumnWidth(3, 50)
 
-    def set_mapIR(self, mapIR: dict):
-        self.mapIR = mapIR
+        self.itemActivated.connect(self.emit_selected_id)
+
+    def set_mapIR(self, mapIR_main: dict, mapIR_bin: dict):
+        self.mapIR_main = mapIR_main
+        self.mapIR_bin = mapIR_bin
+        self.tree_init()
 
     def tree_init(self):
         """
         初始化树视图
         """
-        self.root = QTreeWidgetItem()
-        self.root.setBackground(0, QBrush(Qt.GlobalColor.yellow))
-        self.root.setBackground(1, QBrush(Qt.GlobalColor.green))
+        self.clear()
 
-        for level in self.mapIR:
-            child1 = QTreeWidgetItem((level, "", ""))
+        self.root = QTreeWidgetItem()
+        self.root.setText(0, "现有对象")
+        # self.root.setBackground(0, QBrush(Qt.GlobalColor.yellow))
+        self.root.setBackground(0, QBrush(Qt.GlobalColor.green))
+
+        for level in self.mapIR_main:
+            # child1 = QTreeWidgetItem((level, "", ""))
+            child1 = QTreeWidgetItem()
+            child1.setText(0, level)
             self.root.addChild(child1)
-            for stage in self.mapIR[level]:
+            for stage in self.mapIR_main[level]:
                 child2 = QTreeWidgetItem()
                 child2.setText(0, stage)
+                child2.setText(1, "{0:n}".format(
+                    len(self.mapIR_main[level][stage]["objects"] + self.mapIR_main[level][stage]["locks"])))
 
-                for obj in (self.mapIR[level][stage]["objects"]+self.mapIR[level][stage]["locks"]):
+                for obj in (self.mapIR_main[level][stage]["objects"] + self.mapIR_main[level][stage]["locks"]):
                     child3 = QTreeWidgetItem()
-                    child3.setText(1, str(obj["id"]))
-                    child3.setText(2, obj["dest"])
+                    child3.setText(2, str(obj["id"]))
+                    child3.setText(3, obj["dest"])
+                    # child3.setHidden(True)
 
                     child2.addChild(child3)
 
@@ -113,7 +128,27 @@ class Obj_Explorer(QTreeWidget):
         self.addTopLevelItem(self.root)
         # self.expandAll()
 
-        # TODO:能加入对树上事物的增减移动操作吗？
+        #################################
+        # 回收站
+        self.bin = QTreeWidgetItem()
+        self.bin.setText(0, "对象回收站")
+        self.bin.setBackground(0, QBrush(Qt.GlobalColor.red))
+        self.bin.setText(1, "{0:n}".format(len(self.mapIR_bin)))
+        for obj in self.mapIR_bin:
+            child1 = QTreeWidgetItem(("", "", str(obj["id"]), obj["dest"]))
+            self.bin.addChild(child1)
+
+        self.addTopLevelItem(self.bin)
+
+        # TODO:能加入对树上事物的增减移动操作吗？——目前考虑：以缪塔丽的mod作为样本，重绘树函数的时间在0.007s左右，故目前考虑直接以重绘的方式实现刷新。
+
+    def emit_selected_id(self, item, column):
+        """
+        当对象被选中时，返回对象id
+        """
+        _id = item.text(2)
+        if (_id):
+            self.objWasSelected.emit(int(_id))
 
 
 class Maps_Editor_Main_Widget(QMainWindow):
@@ -127,6 +162,7 @@ class Maps_Editor_Main_Widget(QMainWindow):
         self.dataIR = IR()
         self.dataBuffer = None  # 名义上还叫作“dataBuffer”，实质上已经是东周天子，象征性需要，跟main.py交互需要。数据大权在楼上。
         self.currentStage = ['1', '1']  # 当前正在操作的区段
+        self.currentObj_id = -1  # 当前操作对象的id
         self.currentObj = None  # 当前正在操作的对象
 
         self.currentDir = pathlib.Path().home()  # TODO:要有跟main.py里一样的记忆功能
@@ -144,9 +180,12 @@ class Maps_Editor_Main_Widget(QMainWindow):
         ####################################
         # 中央控件
         # TODO
-        self.objExplorer = Obj_Explorer(
-            self.dataIR.get_IR_data())
+        self.objExplorer = Obj_Explorer()
+        self.objExplorer.set_mapIR(
+            self.dataIR.get_IR_data(), self.dataIR.get_IR_data_recycleBin())
         # print(self.dataIR.dataBuffer)
+        self.objExplorer.objWasSelected.connect(self.change_current_obj)
+
         self.obj2DViewer = QWidget()
         self.objParamsEditor = QWidget()
 
@@ -172,6 +211,7 @@ class Maps_Editor_Main_Widget(QMainWindow):
 
     def set_data(self, LevelData: dict):
         self.dataIR.load_from_json_dict(LevelData)
+        self.objExplorer.set_mapIR(self.dataIR.get_IR_data())
         # TODO:应该需要一个当即刷新的函数
 
     ###########################################
@@ -182,13 +222,22 @@ class Maps_Editor_Main_Widget(QMainWindow):
             filePath = (self.IRFileDialog.selectedFiles())[0]  # 肯定只选择了1个文件
             self.dataIR.load_from_IR_file(filePath)
             self.dataIR.index_init()
-            self.objExplorer.set_mapIR(self.dataIR.get_IR_data())
-            self.objExplorer.tree_init()
+            self.objExplorer.set_mapIR(
+                self.dataIR.get_IR_data(), self.dataIR.get_IR_data_recycleBin())
+            # self.objExplorer.tree_init()
+
+    #################################
+    def change_current_obj(self, _id: int):
+        """
+        改变当前关注的对象
+        """
+        print("当前关注对象id: {0:n}".format(_id))
+        self.currentObj_id = _id
+        self.currentObj = self.dataIR.objList[self.currentObj_id]
 
 
 if (__name__ == "__main__"):
     app = QApplication([])
     window = Maps_Editor_Main_Widget()
-    # window = Obj_Explorer()
     window.show()
     app.exec()
