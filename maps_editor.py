@@ -2,6 +2,8 @@ import PyQt6
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
+import pyqtgraph as pg
+from pyqtgraph.parametertree import Parameter, ParameterTree
 from c2ir import IR
 import pathlib
 
@@ -149,6 +151,11 @@ class Obj_Explorer(QTreeWidget):
         _id = item.text(2)
         if (_id):
             self.objWasSelected.emit(int(_id))
+
+
+class Obj_ParamsEditor(QWidget):
+    def __init__(self):
+        super(Obj_ParamsEditor, self).__init__()
 
 
 class Maps_Editor_Main_Widget(QMainWindow):
