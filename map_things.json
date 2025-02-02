@@ -582,6 +582,61 @@
 					}
 				}
 			]
+		},
+		"enemy50": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "接敌前状态(State)",
+					"value": {
+						"values": {"0 -> int": "自由行(Free)", "1 -> int": "冲出(Rush Out)", "2 -> int": "从笼中释放(In Cage)"}
+					}
+				}
+			]
+		},
+		"enemy51": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "接敌前状态(State)",
+					"value": {
+						"values": {"0 -> int": "自由行(Free)", "1 -> int": "冲出(Rush Out)", "2 -> int": "空降(Landing)"}
+					}
+				}
+			]
+		},
+		"enemy52": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "出场状态(State)",
+					"value": {
+						"values": {"0 -> int": "自由行(Free)", "1 -> int": "附带狙击手(With Sniper)"}
+					}
+				}
+			]
+		},
+		"enemy53": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "接敌前状态(State)",
+					"value": {
+						"values": {"0 -> int": "自由行(Free)", "1 -> int": "空降(Landing)"}
+					}
+				}
+			]
+		},
+		"enemy54": {
+			"vars": [
+				{
+					"key": "movNsta",
+					"dest": "接敌前状态(State)",
+					"value": {
+						"values": {"0 -> int": "自由行(Free)", "1 -> int": "冲出(Rush Out)"}
+					}
+				}
+			]
 		}
 	},
 
