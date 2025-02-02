@@ -174,5 +174,24 @@
 	{
 		"name": "enemy48",
 		"dest": "火箭头"
+	},
+	{	"name": "enemy50",
+		"dest": "迅猛龙"
+	},
+	{
+		"name": "enemy51",
+		"dest": "三角龙"
+	},
+	{
+		"name": "enemy52",
+		"dest": "翼龙"
+	},
+	{
+		"name": "enemy53",
+		"dest": "剑龙"
+	},
+	{
+		"name": "enemy54",
+		"dest": "霸王龙"
 	}
 ]
