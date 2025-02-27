@@ -157,6 +157,81 @@ class Obj_ParamsEditor(QWidget):
     def __init__(self):
         super(Obj_ParamsEditor, self).__init__()
 
+    def __build_params_tree_4_use__(self, objIR: dict) -> dict:
+        rootName = "{0:s} :: {1:s}".format(objIR["name"], objIR["dest"])
+        root = {"name": rootName, "type": "group", "children": []}
+
+        ##################################
+        # 需要单独处理的：坐标
+        (x, y) = objIR["pos"]
+        posGroup_x = {"name": "x=", "type": "float", "value": x}
+        posGroup_y = {"name": "y=", "type": "float", "value": y}
+        for i in (posGroup_x, posGroup_y):
+            root["children"].append(i)
+
+        not2Phase = ("name", "dest", "rem", "pos")
+        for (k, v) in objIR.items():
+            if (not (k in not2Phase)):
+                if ("varNameList" in v):  # 如果是特殊参数列表
+                    param = {"name": "{0:s} :: ".format(
+                        k), "type": "group", "children": []}
+                    paramChildren = param["children"]
+
+                    for k_sub in v["varNameList"]:
+                        subNode = {
+                            "name": ""
+                        }
+                        # TODO
+                else:  # 普通参数
+                    self.__build_params_tree_4_use_DFS1__(
+                        k, v, root["children"])
+
+    def __find_valuesSet_and_value__(self, _d: dict):
+        """
+        可能返回一个tuple或0，0代表未找到，意味着需要往下递归。
+        """
+        for k in _d:
+            if (_d.endswith("_current")):
+                return (k.removesuffix("_current"), k)
+
+        return 0
+
+    def __build_params_tree_4_use_DFS1__(self, obj_k, obj_v, parentNode: list):
+        """
+        递归处理遇到的普通参数
+        """
+        tryFindKV = self.__find_valuesSet_and_value__(obj_v)
+        if (tryFindKV):  # 可以找到值，则生成参数结点
+            (k_Vset, k_Vcurrent) = tryFindKV
+            if (k_Vset == -32768):
+                param = {"name": "{0:s} :: {1:s}".format(k, v["dest"]),
+                         "type": "float",
+                         "value": v[k_Vcurrent]}
+            elif (type(k_Vset) == type(dict())):
+                param = {
+                    "name": "{0:s} :: {1:s}".format(k, v["dest"]),
+                    "type": "list",
+                    "value": v[k_Vcurrent]
+                    "limits": self.__vSet_convert__(v[k_Vset])
+                }
+            parentNode.append(param)
+        else:  # 在此节点找不到值，则向下递归
+            subNode = {
+                "name": "{0:s} :: ".format(obj_k),
+                "type": "group",
+                "children": []
+            }
+            parentNode.append(subNode)
+            for (k_sub, v_sub) in obj_v.items():
+                self.__build_params_tree_4_use_DFS1__(
+                    k_sub, v_sub, subNode["children"])
+
+    def __vSet_convert__(self, vSet: dict):
+        """
+        将类似{0: "a", 1: "b"}的参数列表转化为["0 :: a", "1 :: b"]的格式
+        """
+        return ["{0:n} :: {1:s}".format(k, v) for (k, v) in vSet.items()]
+
 
 class Maps_Editor_Main_Widget(QMainWindow):
     valueChanged = pyqtSignal()
